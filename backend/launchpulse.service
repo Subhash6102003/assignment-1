@@ -1,0 +1,15 @@
+[Unit]
+Description=LaunchPulse GTM Studio FastAPI Backend Daemon
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/launchpulse/backend
+Environment="PATH=/home/ubuntu/launchpulse/backend/.venv/bin"
+Environment="PORT=8000"
+ExecStart=/home/ubuntu/launchpulse/backend/.venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 --workers 2
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

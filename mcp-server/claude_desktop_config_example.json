@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "reportly": {
+      "command": "d:\\don't_know\\Assignment 1\\backend\\.venv\\Scripts\\python.exe",
+      "args": [
+        "d:\\don't_know\\Assignment 1\\mcp-server\\server.py"
+      ],
+      "env": {
+        "REPORTLY_API_URL": "http://127.0.0.1:8000"
+      }
+    }
+  }
+}

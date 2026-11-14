@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reportly — AI Client Report Writer & Analytics Portal for Agencies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-canvas: #f8f9fb;
+      --bg-card: #ffffff;
+      --border-card: #eceef2;
+      --border-subtle: #f0f2f5;
+      --text-primary: #12151a;
+      --text-secondary: #667085;
+      --text-muted: #98a2b3;
+      --accent-orange: #ff5c00;
+      --accent-orange-hover: #e65200;
+      --orange-light: #fff2ea;
+      --orange-tint: #ffe4d4;
+      --orange-soft: #ffcaa8;
+      --orange-medium: #ff8c4a;
+      --green-badge: #12b76a;
+      --green-badge-bg: #ecfdf3;
+      --dark-pill: #101828;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-card: 0 1px 3px rgba(16, 24, 40, 0.04), 0 1px 2px rgba(16, 24, 40, 0.02);
+      --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ================= SIDEBAR ================= */
+    aside.sidebar {
+      width: 250px;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border-card);
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      min-height: 100vh;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 10;
+    }
+
+    .org-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 8px;
+      margin-bottom: 16px;
+    }
+
+    .org-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .org-avatar {
+      width: 34px;
+      height: 34px;
+      background: #111;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .org-info h4 {
+      font-size: 13.5px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .org-info span {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .client-selector-dropdown {
+      background: #f4f5f7;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .client-selector-dropdown:hover {
+      background: #fff;
+      border-color: #d0d5dd;
+    }
+
+    .menu-group { margin-bottom: 22px; }
+
+    .menu-group-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      padding: 0 10px;
+      margin-bottom: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-bottom: 2px;
+      user-select: none;
+    }
+
+    .nav-item:hover {
+      background: #f8f9fa;
+      color: var(--text-primary);
+    }
+
+    .nav-item.active {
+      background: #fff;
+      color: var(--text-primary);
+      font-weight: 700;
+      position: relative;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 6px;
+      width: 3.5px;
+      background: var(--accent-orange);
+      border-radius: 0 4px 4px 0;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-icon {
+      width: 17px;
+      height: 17px;
+      stroke-width: 2;
+      stroke: currentColor;
+      fill: none;
+    }
+
+    .badge-count {
+      font-size: 11px;
+      font-weight: 600;
+      background: #f0f2f5;
+      padding: 2px 8px;
+      border-radius: 12px;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .badge-active {
+      background: var(--green-badge-bg);
+      color: var(--green-badge);
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 16px;
+    }
+
+    .mcp-status-pill {
+      background: #fdfbf9;
+      border: 1px solid var(--orange-tint);
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .mcp-status-pill:hover {
+      background: var(--orange-light);
+    }
+
+    .mcp-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green-badge);
+      box-shadow: 0 0 0 3px rgba(18, 183, 106, 0.2);
+      flex-shrink: 0;
+    }
+
+    .mcp-pill-text h6 {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .mcp-pill-text p {
+      font-size: 10px;
+      color: var(--text-secondary);
+    }
+
+    /* ================= MAIN CONTENT ================= */
+    main.content {
+      flex: 1;
+      padding: 24px 32px 48px;
+      overflow-y: auto;
+      max-width: 1400px;
+    }
+
+    header.top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .top-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .top-bar h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .read-receipt-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-badge-bg);
+      color: var(--green-badge);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-secondary:hover {
+      border-color: #d0d5dd;
+      color: var(--text-primary);
+    }
+
+    .btn-dark {
+      background: var(--dark-pill);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 12.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn-dark:hover { opacity: 0.9; }
+
+    .btn-orange {
+      background: var(--accent-orange);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 12.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-orange:hover { background: var(--accent-orange-hover); }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .icon-btn:hover {
+      border-color: #d0d5dd;
+      color: var(--text-primary);
+    }
+
+    /* Sub-header Tabs & Filters */
+    .view-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 12px;
+    }
+
+    .tabs-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-btn {
+      background: none;
+      border: 1px solid transparent;
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .tab-btn:hover { color: var(--text-primary); }
+
+    .tab-btn.active {
+      background: var(--bg-card);
+      border-color: var(--border-card);
+      color: var(--text-primary);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+
+    .tab-btn.btn-add {
+      color: var(--text-muted);
+      border: 1px dashed var(--border-card);
+    }
+
+    .tab-btn.btn-add:hover {
+      border-color: var(--accent-orange);
+      color: var(--accent-orange);
+    }
+
+    .view-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Page View Sections */
+    .page-section { display: none; }
+    .page-section.active { display: block; }
+
+    /* ================= ROW 1: 4 METRIC CARDS ================= */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-md);
+      padding: 18px 20px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-card);
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .metric-card:hover {
+      border-color: #d0d5dd;
+      transform: translateY(-1px);
+    }
+
+    .metric-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .metric-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .metric-value-wrap {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+
+    .metric-value {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .metric-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #f6f7f9;
+    }
+
+    .metric-delta {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .metric-delta-tag {
+      color: var(--green-badge);
+      font-weight: 700;
+      background: var(--green-badge-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10.5px;
+    }
+
+    .metric-link {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .metric-link:hover { color: var(--accent-orange); }
+
+    .mini-chart { width: 44px; height: 32px; }
+
+    /* ================= MAIN CHARTS ROW ================= */
+    .charts-row-main {
+      display: grid;
+      grid-template-columns: 310px 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg);
+      padding: 20px 22px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .panel-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Gauge */
+    .gauge-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      margin: 10px 0;
+    }
+
+    .gauge-svg { width: 220px; height: 120px; }
+
+    .gauge-center-text {
+      position: absolute;
+      bottom: 6px;
+      text-align: center;
+    }
+
+    .gauge-score {
+      font-size: 38px;
+      font-weight: 800;
+      line-height: 1;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .gauge-score-delta {
+      font-size: 12px;
+      color: var(--green-badge);
+      font-weight: 700;
+      background: var(--green-badge-bg);
+      padding: 2px 6px;
+      border-radius: 6px;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+
+    .gauge-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Interactive Bar Chart */
+    .bar-chart-container {
+      position: relative;
+      width: 100%;
+      height: 230px;
+      margin-top: 10px;
+    }
+
+    .interactive-bar {
+      cursor: pointer;
+      transition: fill 0.15s, opacity 0.15s;
+    }
+
+    .interactive-bar:hover { opacity: 0.8; }
+
+    .floating-tooltip {
+      position: absolute;
+      background: #11151c;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 10;
+      pointer-events: none;
+      min-width: 130px;
+      transition: all 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    .tooltip-header {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .tooltip-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ROW 3: HEATMAP & DONUT */
+    .charts-row-bottom {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .heatmap-legend {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .legend-cell { width: 14px; height: 8px; border-radius: 3px; }
+
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: 90px repeat(7, 1fr);
+      row-gap: 10px;
+      column-gap: 10px;
+      margin-top: 18px;
+      align-items: center;
+    }
+
+    .heatmap-day-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .heatmap-time-label {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .heat-pill {
+      height: 26px;
+      border-radius: 13px;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .heat-pill:hover {
+      transform: scale(1.08);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .heat-0 { background: #ffe4d4; }
+    .heat-1 { background: #ffcaa8; }
+    .heat-2 { background: #ff8c4a; }
+    .heat-3 { background: #ff5c00; }
+
+    .donut-panel-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .donut-big-stat {
+      font-size: 26px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: -0.02em;
+    }
+
+    .donut-delta {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .donut-legend-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .legend-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-secondary);
+    }
+
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    .legend-val {
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ================= ROW 4: CLAUDE EXECUTIVE REPORT NARRATIVE ================= */
+    .report-narrative-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 24px;
+    }
+
+    .narrative-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+
+    .narrative-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-ai {
+      background: var(--orange-tint);
+      color: var(--accent-orange);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .narrative-section {
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f8f9fb;
+    }
+
+    .narrative-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .narrative-section h4 {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .narrative-content {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .editable-paragraph {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      outline: none;
+      transition: all 0.15s;
+    }
+
+    .editable-paragraph:hover {
+      background: #fafbfc;
+      border-color: #e4e7ec;
+    }
+
+    .editable-paragraph:focus {
+      background: #fff;
+      border-color: var(--accent-orange);
+      box-shadow: 0 0 0 3px rgba(255, 92, 0, 0.1);
+    }
+
+    /* ================= CLIENT PUBLIC VIEW MODE ================= */
+    .client-public-view {
+      display: none;
+      background: white;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-card);
+      padding: 32px 40px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .client-public-view.active { display: block; }
+
+    /* ================= MODAL & SLIDE OVER DRAWER ================= */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(16, 24, 40, 0.4);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-box {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      width: 90%;
+      max-width: 560px;
+      box-shadow: var(--shadow-modal);
+      animation: modalPop 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .modal-header h3 { font-size: 17px; font-weight: 700; }
+
+    .form-group { margin-bottom: 14px; }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .form-control:focus { border-color: var(--accent-orange); }
+
+    .modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      background: #11151c;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: toastIn 0.2s ease;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* MCP Console Log Window */
+    .mcp-console-card {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: var(--radius-lg);
+      padding: 18px 22px;
+      color: #c9d1d9;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      margin-top: 24px;
+    }
+
+    .mcp-log-stream {
+      background: #010409;
+      border-radius: 8px;
+      padding: 14px;
+      height: 180px;
+      overflow-y: auto;
+      margin-top: 12px;
+      border: 1px solid #21262d;
+      line-height: 1.6;
+    }
+
+    .log-line { margin-bottom: 4px; }
+    .log-info { color: #58a6ff; }
+    .log-success { color: #3fb950; }
+  </style>
+</head>
+<body>
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar">
+    <div class="org-header">
+      <div class="org-left" onclick="showToast('Reportly Agency Suite — Active')">
+        <div class="org-avatar">R</div>
+        <div class="org-info">
+          <h4>Reportly Agency</h4>
+          <span>Growth Partner Plan</span>
+        </div>
+      </div>
+      <button class="icon-btn" style="width:28px; height:28px;" onclick="showToast('Sidebar locked.')" title="Collapse">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="11 17 6 12 11 7"></polyline><polyline points="18 17 13 12 18 7"></polyline></svg>
+      </button>
+    </div>
+
+    <!-- Active Client Switcher -->
+    <div class="client-selector-dropdown" onclick="openClientModal()">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:16px;">🏢</span>
+        <div>
+          <div style="font-size:12px; color:var(--text-muted); font-weight:500;">Active Client:</div>
+          <div id="current-client-name">TechCorp Global</div>
+        </div>
+      </div>
+      <span style="color:var(--text-muted);">▾</span>
+    </div>
+
+    <!-- MAIN MENU -->
+    <div class="menu-group">
+      <div class="menu-group-title">Reports & Analytics</div>
+      
+      <div class="nav-item active" id="nav-dashboard" onclick="switchMainTab('dashboard')">
+        <div class="nav-left">
+          <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
+          <span>Client Overview</span>
+        </div>
+      </div>
+
+      <div class="nav-item" id="nav-reports-archive" onclick="switchMainTab('archive')">
+        <div class="nav-left">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          <span>Past Reports Archive</span>
+        </div>
+        <span class="badge-count">12</span>
+      </div>
+
+      <div class="nav-item" id="nav-clients" onclick="openClientModal()">
+        <div class="nav-left">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span>All Agency Clients</span>
+        </div>
+        <span class="badge-count">8</span>
+      </div>
+    </div>
+
+    <!-- OPERATIONS & CLAUDE INTEGRATION -->
+    <div class="menu-group">
+      <div class="menu-group-title">Claude MCP Engine</div>
+      <div class="nav-item" id="nav-mcp" onclick="switchMainTab('mcp')">
+        <div class="nav-left">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          <span>Claude MCP Terminal</span>
+        </div>
+        <span class="badge-count badge-active">Live</span>
+      </div>
+    </div>
+
+    <!-- BOTTOM MCP STATUS CARD -->
+    <div class="sidebar-bottom">
+      <div class="mcp-status-pill" onclick="switchMainTab('mcp')">
+        <div class="mcp-dot"></div>
+        <div class="mcp-pill-text">
+          <h6>Claude MCP Connected</h6>
+          <p>create_client_report active</p>
+        </div>
+        <span style="margin-left: auto; color: var(--accent-orange); font-size: 14px;">›</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="content">
+
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <h1 id="page-title">October 2024 Performance Report</h1>
+        <span class="read-receipt-badge" id="read-receipt-pill">
+          <span>👁️</span> <span>Client Viewed 2m ago</span>
+        </span>
+      </div>
+
+      <div class="top-actions">
+        <!-- Human Edit Toggle -->
+        <button class="btn-secondary" id="btn-edit-toggle" onclick="toggleEditMode()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+          <span id="edit-mode-label">Edit Narrative</span>
+        </button>
+
+        <!-- Preview As Client -->
+        <button class="btn-secondary" onclick="toggleClientPreview()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          <span id="preview-mode-label">Preview Client View</span>
+        </button>
+
+        <!-- Publish & Share Link -->
+        <button class="btn-orange" onclick="publishAndCopyLink()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+          Share Client URL
+        </button>
+      </div>
+    </header>
+
+    <!-- Sub-header Tabs & Filters -->
+    <div class="view-row">
+      <div class="tabs-group">
+        <button class="tab-btn active" id="tab-overview" onclick="switchMainTab('dashboard')">Executive Overview</button>
+        <button class="tab-btn" id="tab-archive" onclick="switchMainTab('archive')">All Monthly Reports</button>
+        <button class="tab-btn" id="tab-mcp" onclick="switchMainTab('mcp')">Claude Generation Console</button>
+        <button class="tab-btn btn-add" onclick="openNewReportModal()">+ New Report with Claude</button>
+      </div>
+
+      <div class="view-actions">
+        <button class="btn-secondary" onclick="exportReportPDF()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Export PDF
+        </button>
+        <button class="btn-dark" onclick="showToast('Branded agency white-label settings applied.')">
+          White-Label
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= VIEW 1: ACTIVE REPORT DASHBOARD ================= -->
+    <div id="view-dashboard" class="page-section active">
+      
+      <!-- ROW 1: 4 METRIC CARDS -->
+      <section class="metrics-grid">
+        <!-- Active Sales / Traffic -->
+        <div class="metric-card" onclick="showToast('Active Traffic: 24,064 Organic Visitors in October')">
+          <div class="metric-top">
+            <span class="metric-title">Active Traffic</span>
+            <svg class="mini-chart" viewBox="0 0 44 32">
+              <rect x="2" y="16" width="6" height="16" rx="3" fill="#ff5c00" opacity="0.3"></rect>
+              <rect x="12" y="10" width="6" height="22" rx="3" fill="#ff5c00" opacity="0.5"></rect>
+              <rect x="22" y="4" width="6" height="28" rx="3" fill="#ff5c00"></rect>
+              <rect x="32" y="8" width="6" height="24" rx="3" fill="#ff5c00"></rect>
+            </svg>
+          </div>
+          <div class="metric-value-wrap">
+            <span class="metric-value" id="val-traffic">24,064</span>
+          </div>
+          <div class="metric-bottom">
+            <span class="metric-delta">vs last month <span class="metric-delta-tag">↑ 12%</span></span>
+            <span class="metric-link">See Details →</span>
+          </div>
+        </div>
+
+        <!-- Product Revenue -->
+        <div class="metric-card" onclick="showToast('Attributed Revenue: $15,490 from SEO campaigns')">
+          <div class="metric-top">
+            <span class="metric-title">Attributed Revenue</span>
+            <svg class="mini-chart" viewBox="0 0 44 32">
+              <path d="M2 24 Q 12 28, 20 18 T 34 10 T 42 6" fill="none" stroke="#ff5c00" stroke-width="2.5" stroke-linecap="round"></path>
+            </svg>
+          </div>
+          <div class="metric-value-wrap">
+            <span class="metric-value" id="val-revenue">$15,490</span>
+          </div>
+          <div class="metric-bottom">
+            <span class="metric-delta">vs last month <span class="metric-delta-tag">↑ 9%</span></span>
+            <span class="metric-link">See Details →</span>
+          </div>
+        </div>
+
+        <!-- Conversions / Product Sold -->
+        <div class="metric-card" onclick="showToast('Conversions: 2,355 Qualified Leads / Orders')">
+          <div class="metric-top">
+            <span class="metric-title">Conversions / Leads</span>
+            <svg class="mini-chart" viewBox="0 0 36 36">
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#f0f2f5" stroke-width="4"></circle>
+              <circle cx="18" cy="18" r="14" fill="none" stroke="#ff5c00" stroke-width="4" stroke-dasharray="65 100" stroke-linecap="round" transform="rotate(-90 18 18)"></circle>
+            </svg>
+          </div>
+          <div class="metric-value-wrap">
+            <span class="metric-value" id="val-sold">2,355</span>
+          </div>
+          <div class="metric-bottom">
+            <span class="metric-delta">vs last month <span class="metric-delta-tag">↑ 7%</span></span>
+            <span class="metric-link">See Details →</span>
+          </div>
+        </div>
+
+        <!-- Conversion Rate -->
+        <div class="metric-card" onclick="showToast('Conversion Rate: 12.5% on product landing pages')">
+          <div class="metric-top">
+            <span class="metric-title">Conversion Rate</span>
+            <svg class="mini-chart" viewBox="0 0 44 32">
+              <line x1="4" y1="8" x2="4" y2="24" stroke="#ff5c00" stroke-width="2.5" stroke-linecap="round"></line>
+              <line x1="12" y1="4" x2="12" y2="28" stroke="#ff5c00" stroke-width="2.5" stroke-linecap="round"></line>
+              <line x1="20" y1="12" x2="20" y2="20" stroke="#ff5c00" stroke-width="2.5" stroke-linecap="round"></line>
+              <line x1="28" y1="2" x2="28" y2="30" stroke="#ff5c00" stroke-width="2.5" stroke-linecap="round"></line>
+              <line x1="36" y1="10" x2="36" y2="22" stroke="#ff5c00" stroke-width="2.5" stroke-linecap="round"></line>
+            </svg>
+          </div>
+          <div class="metric-value-wrap">
+            <span class="metric-value" id="val-rate">12.5%</span>
+          </div>
+          <div class="metric-bottom">
+            <span class="metric-delta">vs last month <span class="metric-delta-tag">↑ 2%</span></span>
+            <span class="metric-link">See Details →</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ROW 2: MAIN CHARTS -->
+      <section class="charts-row-main">
+        <!-- Left: Performance Speedometer Gauge -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <span class="panel-title">Campaign Health Score</span>
+          </div>
+          <div class="gauge-wrapper">
+            <svg class="gauge-svg" viewBox="0 0 200 110">
+              <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#f0f2f5" stroke-width="16" stroke-linecap="round"></path>
+              <path d="M 20 100 A 80 80 0 0 1 162 52" fill="none" stroke="#ff5c00" stroke-width="16" stroke-linecap="round"></path>
+            </svg>
+            <div class="gauge-center-text">
+              <div class="gauge-score">82<span class="gauge-score-delta">+1</span></div>
+              <div class="gauge-sub">of 100 points</div>
+            </div>
+          </div>
+          <div style="margin-top:14px;">
+            <h4 style="font-size:13.5px; font-weight:700; margin-bottom:4px;">Growth is strong! ✨</h4>
+            <p style="font-size:11.5px; color:var(--text-secondary); line-height:1.45; margin-bottom:14px;">
+              Your SEO and ad channels are performing well above industry benchmarks, exceeding Q4 targets in organic visibility.
+            </p>
+          </div>
+          <button class="btn-secondary" style="width:100%; justify-content:center;" onclick="showToast('Optimizing campaign checklist...')">Improve Your Score →</button>
+        </div>
+
+        <!-- Right: Monthly Trend Bar Chart with Hatch Pattern -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <span class="panel-title">Monthly Growth Trend (Click bars to inspect)</span>
+            <div style="display:flex; gap:8px;">
+              <button class="btn-secondary" style="padding:4px 10px; font-size:12px;" onclick="showToast('Showing full 12-month trailing data.')">Last Year ▾</button>
+            </div>
+          </div>
+
+          <div class="bar-chart-container">
+            <div class="floating-tooltip" id="chart-tooltip" style="top: 24px; left: 52%;">
+              <div class="tooltip-header" id="tooltip-month">Jun, 2024</div>
+              <div class="tooltip-row"><span>Revenue:</span> <span id="tooltip-val-1">$2,766</span></div>
+              <div class="tooltip-row" style="color:#ff8c4a;"><span>Conv. Rate:</span> <span id="tooltip-val-2">8.7%</span></div>
+            </div>
+
+            <svg width="100%" height="100%" viewBox="0 0 700 210" preserveAspectRatio="none">
+              <defs>
+                <pattern id="diagonalHatch" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                  <line x1="0" y1="0" x2="0" y2="8" stroke="#e4e7ec" stroke-width="2.5"></line>
+                </pattern>
+              </defs>
+              <g stroke="#f2f4f7" stroke-dasharray="3 3">
+                <line x1="45" y1="20" x2="690" y2="20"></line>
+                <line x1="45" y1="65" x2="690" y2="65"></line>
+                <line x1="45" y1="110" x2="690" y2="110"></line>
+                <line x1="45" y1="155" x2="690" y2="155"></line>
+                <line x1="45" y1="190" x2="690" y2="190"></line>
+              </g>
+
+              <g font-size="11" fill="#98a2b3" font-family="'JetBrains Mono', monospace">
+                <text x="10" y="24">$4K</text>
+                <text x="10" y="69">$3K</text>
+                <text x="10" y="114">$2K</text>
+                <text x="10" y="159">$1K</text>
+                <text x="24" y="193">0</text>
+              </g>
+
+              <!-- Interactive Bars -->
+              <rect class="interactive-bar" onclick="selectBar('Jan', 1840, '7.2%', 79, this)" x="62" y="130" width="34" height="60" rx="17" fill="url(#diagonalHatch)"></rect>
+              <rect class="interactive-bar" onclick="selectBar('Feb', 2120, '7.8%', 131, this)" x="114" y="100" width="34" height="90" rx="17" fill="url(#diagonalHatch)"></rect>
+              <rect class="interactive-bar" onclick="selectBar('Mar', 3450, '9.1%', 183, this)" x="166" y="50" width="34" height="140" rx="17" fill="url(#diagonalHatch)"></rect>
+              <rect class="interactive-bar" onclick="selectBar('Apr', 2900, '8.4%', 235, this)" x="218" y="70" width="34" height="120" rx="17" fill="url(#diagonalHatch)"></rect>
+              <rect class="interactive-bar" onclick="selectBar('May', 2200, '7.5%', 287, this)" x="270" y="115" width="34" height="75" rx="17" fill="url(#diagonalHatch)"></rect>
+              
+              <!-- Jun (Selected Solid Orange) -->
+              <rect id="active-bar" class="interactive-bar" onclick="selectBar('Jun', 2766, '8.7%', 339, this)" x="322" y="45" width="34" height="145" rx="17" fill="#ff5c00"></rect>
+              <circle cx="339" cy="45" r="4.5" fill="#fff" stroke="#ff5c00" stroke-width="3"></circle>
+              <line x1="339" y1="15" x2="339" y2="40" stroke="#ff5c00" stroke-width="1.5"></line>
+
+              <rect class="interactive-bar" onclick="selectBar('Jul', 1650, '6.9%', 391, this)" x="374" y="140" width="34" height="50" rx="17" fill="url(#diagonalHatch)"></rect>
+              <rect class="interactive-bar" onclick="selectBar('Aug', 2300, '8.1%', 443, this)" x="426" y="95" width="34" height="95" rx="17" fill="url(#diagonalHatch)"></rect>
+              <rect class="interactive-bar" onclick="selectBar('Sept', 2100, '7.9%', 495, this)" x="478" y="110" width="34" height="80" rx="17" fill="url(#diagonalHatch)"></rect>
+              <rect class="interactive-bar" onclick="selectBar('Okt', 2450, '8.5%', 547, this)" x="530" y="90" width="34" height="100" rx="17" fill="url(#diagonalHatch)"></rect>
+              <rect class="interactive-bar" onclick="selectBar('Nov', 2600, '8.9%', 599, this)" x="582" y="85" width="34" height="105" rx="17" fill="url(#diagonalHatch)"></rect>
+              <rect class="interactive-bar" onclick="selectBar('Dec', 3100, '9.4%', 651, this)" x="634" y="60" width="34" height="130" rx="17" fill="url(#diagonalHatch)"></rect>
+
+              <g font-size="11" fill="#667085" text-anchor="middle" font-weight="500">
+                <text x="79" y="206">Jan</text>
+                <text x="131" y="206">Feb</text>
+                <text x="183" y="206">Mar</text>
+                <text x="235" y="206">Apr</text>
+                <text x="287" y="206">May</text>
+                <text x="339" y="206" fill="#12151a" font-weight="700">Jun</text>
+                <text x="391" y="206">Jul</text>
+                <text x="443" y="206">Aug</text>
+                <text x="495" y="206">Sept</text>
+                <text x="547" y="206">Okt</text>
+                <text x="599" y="206">Nov</text>
+                <text x="651" y="206">Dec</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- ROW 3: HEATMAP & DONUT -->
+      <section class="charts-row-bottom">
+        <!-- Heatmap -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <span class="panel-title">Audience Visit Activity by Time</span>
+            <div class="heatmap-legend">
+              <span>0</span>
+              <span class="legend-cell heat-0"></span>
+              <span class="legend-cell heat-1"></span>
+              <span class="legend-cell heat-2"></span>
+              <span class="legend-cell heat-3"></span>
+              <span>10,000+</span>
+            </div>
+          </div>
+
+          <div class="heatmap-grid">
+            <div></div>
+            <div class="heatmap-day-label">Mon</div>
+            <div class="heatmap-day-label">Tue</div>
+            <div class="heatmap-day-label">Wed</div>
+            <div class="heatmap-day-label">Thu</div>
+            <div class="heatmap-day-label">Fri</div>
+            <div class="heatmap-day-label">Sat</div>
+            <div class="heatmap-day-label">Sun</div>
+
+            <div class="heatmap-time-label">12 AM - 8 AM</div>
+            <div class="heat-pill heat-2" onclick="showToast('Mon early morning traffic spike')"></div>
+            <div class="heat-pill heat-0"></div>
+            <div class="heat-pill heat-1"></div>
+            <div class="heat-pill heat-0"></div>
+            <div class="heat-pill heat-0"></div>
+            <div class="heat-pill heat-0"></div>
+            <div class="heat-pill heat-0"></div>
+
+            <div class="heatmap-time-label">8 AM - 4 PM</div>
+            <div class="heat-pill heat-3" onclick="showToast('Mon peak conversion window: 10,400 visitors')"></div>
+            <div class="heat-pill heat-0"></div>
+            <div class="heat-pill heat-3"></div>
+            <div class="heat-pill heat-2"></div>
+            <div class="heat-pill heat-0"></div>
+            <div class="heat-pill heat-2"></div>
+            <div class="heat-pill heat-3"></div>
+
+            <div class="heatmap-time-label">4 PM - 12 AM</div>
+            <div class="heat-pill heat-0"></div>
+            <div class="heat-pill heat-2"></div>
+            <div class="heat-pill heat-0"></div>
+            <div class="heat-pill heat-3"></div>
+            <div class="heat-pill heat-0"></div>
+            <div class="heat-pill heat-1"></div>
+            <div class="heat-pill heat-2"></div>
+          </div>
+        </div>
+
+        <!-- Donut / Pie Device Split -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <span class="panel-title">Total Visit & Device Attribution</span>
+          </div>
+
+          <div class="donut-panel-content">
+            <div class="donut-details">
+              <div>
+                <div class="donut-big-stat">191,886</div>
+                <div class="donut-delta">vs last month <span class="metric-delta-tag">↑ 8.5%</span></div>
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">
+                <div class="donut-legend-item">
+                  <span class="legend-name"><span class="legend-dot" style="background:var(--accent-orange);"></span> Mobile Visitors</span>
+                  <span class="legend-val">115,132</span>
+                </div>
+                <div class="donut-legend-item">
+                  <span class="legend-name"><span class="legend-dot" style="background:#ffd3bf;"></span> Desktop Website</span>
+                  <span class="legend-val">76,754</span>
+                </div>
+              </div>
+            </div>
+
+            <svg width="120" height="120" viewBox="0 0 100 100" style="cursor:pointer;" onclick="showToast('Device Share: 60% Mobile / 40% Desktop')">
+              <path d="M 50 50 L 50 5 A 45 45 0 1 1 12 75 Z" fill="#ff5c00"></path>
+              <path d="M 50 50 L 12 75 A 45 45 0 0 1 50 5 Z" fill="#ffd3bf"></path>
+              <text x="68" y="70" fill="#fff" font-size="9" font-weight="700">60%</text>
+              <text x="30" y="35" fill="#12151a" font-size="9" font-weight="700">40%</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- ROW 4: CLAUDE AI EXECUTIVE NARRATIVE REPORT (HUMAN EDITABLE) -->
+      <section class="report-narrative-container">
+        <div class="narrative-header">
+          <div class="narrative-header-left">
+            <span class="badge-ai">🤖 Written by Claude via MCP</span>
+            <h3 style="font-size:16px; font-weight:800;">Executive Performance Summary</h3>
+          </div>
+          <span style="font-size:12px; color:var(--text-muted);">Click any paragraph to edit directly</span>
+        </div>
+
+        <div class="narrative-section">
+          <h4>1. Executive Summary & Key Highlights</h4>
+          <div class="editable-paragraph narrative-content" contenteditable="true" id="p-exec-summary">
+            October was our highest organic revenue month of the year for TechCorp Global. Traffic reached <strong>24,064 organic visitors (+12%)</strong>, directly contributing to <strong>$15,490 in attributed revenue (+9%)</strong>. The team secured 5 high-authority backlinks in the SaaS and cloud security verticals, lifting our primary keyword "enterprise cloud compliance" from position 14 to position 4 on Google Page 1.
+          </div>
+        </div>
+
+        <div class="narrative-section">
+          <h4>2. Channel Diagnostics & Attribution</h4>
+          <div class="editable-paragraph narrative-content" contenteditable="true" id="p-diagnostics">
+            Mobile traffic currently drives <strong>60% of all sessions</strong>, peaking strongly on Monday and Wednesday afternoons between 12 PM and 4 PM. Desktop traffic, while accounting for 40% of sessions, demonstrates a 2.4x higher average order value. The June promotional spike established a solid domain authority baseline that continues to compound in Q4.
+          </div>
+        </div>
+
+        <div class="narrative-section">
+          <h4>3. Challenges & Mitigation</h4>
+          <div class="editable-paragraph narrative-content" contenteditable="true" id="p-challenges">
+            Checkout funnel conversion dipped slightly by 0.3% in mid-October due to mobile latency during peak payment gateway traffic. Our engineering team identified the bottleneck on mobile Safari checkout pages and pushed a caching hotfix on October 28th, restoring cart completion rates above the 12.5% target.
+          </div>
+        </div>
+
+        <div class="narrative-section">
+          <h4>4. Strategic Action Plan for Next Month (November 2024)</h4>
+          <div class="editable-paragraph narrative-content" contenteditable="true" id="p-next-month">
+            In November, we are launching the Q4 holiday gift guide landing page funnel, completing our core web vitals optimization pass for mobile checkout, and publishing 4 in-depth comparison articles targeting high-intent commercial keywords. Target goal: Reach 27,000 monthly visitors and cross $18,000 in monthly attributed revenue.
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ================= VIEW 2: REPORTS ARCHIVE ================= -->
+    <div id="view-archive" class="page-section">
+      <div class="panel-card">
+        <div class="panel-header">
+          <span class="panel-title">All Generated Client Reports for TechCorp Global</span>
+          <button class="btn-orange" onclick="openNewReportModal()">+ Create New Report with Claude</button>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px; margin-top:14px;">
+          <div style="background:#f8f9fb; border:1px solid var(--border-card); border-radius:12px; padding:16px 20px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong style="font-size:14px;">October 2024 Monthly Growth Report</strong>
+              <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Published Nov 1, 2024 · 24,064 Visitors · $15,490 Revenue · <span style="color:var(--green-badge); font-weight:700;">Viewed by Client</span></div>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="btn-secondary" onclick="switchMainTab('dashboard')">View Dashboard</button>
+              <button class="btn-dark" onclick="copyClientLink('oct-2024')">Copy Link</button>
+            </div>
+          </div>
+
+          <div style="background:#f8f9fb; border:1px solid var(--border-card); border-radius:12px; padding:16px 20px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong style="font-size:14px;">September 2024 Performance Audit</strong>
+              <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Published Oct 1, 2024 · 21,400 Visitors · $14,100 Revenue · <span style="color:var(--green-badge); font-weight:700;">Viewed by Client</span></div>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="btn-secondary" onclick="showToast('Loaded September report archive.')">View Archive</button>
+              <button class="btn-dark" onclick="copyClientLink('sept-2024')">Copy Link</button>
+            </div>
+          </div>
+
+          <div style="background:#f8f9fb; border:1px solid var(--border-card); border-radius:12px; padding:16px 20px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong style="font-size:14px;">August 2024 Technical SEO Review</strong>
+              <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Published Sep 1, 2024 · 19,800 Visitors · $12,900 Revenue · <span style="color:var(--green-badge); font-weight:700;">Viewed by Client</span></div>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="btn-secondary" onclick="showToast('Loaded August report archive.')">View Archive</button>
+              <button class="btn-dark" onclick="copyClientLink('aug-2024')">Copy Link</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= VIEW 3: CLAUDE MCP COMMAND CONSOLE ================= -->
+    <div id="view-mcp" class="page-section">
+      <div class="panel-card">
+        <div class="panel-header">
+          <span class="panel-title">Model Context Protocol (MCP) — Live Dispatch Terminal</span>
+          <span class="read-receipt-badge">● FastMCP Server Active (JSON-RPC)</span>
+        </div>
+        <p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px;">
+          This terminal reflects real MCP calls from Claude Desktop. When Claude runs <code>create_client_report()</code> or <code>update_report_section()</code>, the payload arrives here, updates the database, and refreshes the live portal for the client.
+        </p>
+
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+          <button class="btn-secondary" onclick="simulateMcpReportGen()">▶ Simulate: Claude calls create_client_report()</button>
+          <button class="btn-secondary" onclick="simulateMcpUpdateSection()">▶ Simulate: Claude calls update_section()</button>
+          <button class="btn-secondary" onclick="simulateClientViewEvent()">▶ Simulate: Client opens link (Read-Receipt)</button>
+        </div>
+
+        <div class="mcp-console-card">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span>MCP Live Request / Response Log</span>
+            <button class="btn-secondary" style="padding:2px 8px; font-size:11px;" onclick="clearMcpLog()">Clear</button>
+          </div>
+          <div class="mcp-log-stream" id="mcp-log-stream">
+            <div class="log-line log-info">[12:00:01] MCP Server listening on stdio transport</div>
+            <div class="log-line log-success">[12:00:02] Registered Tools: [create_client_report, get_client_reports, update_report_section, publish_report]</div>
+            <div class="log-line">[12:00:03] Ready for prompts from Claude Desktop. Zero AI inside the backend.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- Modal 1: Client Switcher -->
+  <div class="modal-overlay" id="client-modal" onclick="closeOnOutside(event, 'client-modal')">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Select Agency Client</h3>
+        <button class="icon-btn" onclick="closeModal('client-modal')">✕</button>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div class="nav-item active" onclick="switchClient('TechCorp Global', 24064, 15490, '12.5%')">
+          <span>🏢 TechCorp Global (SaaS)</span>
+          <span class="badge-count">Active</span>
+        </div>
+        <div class="nav-item" onclick="switchClient('Acme Fitness D2C', 38200, 29100, '14.2%')">
+          <span>👟 Acme Fitness D2C</span>
+          <span class="badge-count">3 Reports</span>
+        </div>
+        <div class="nav-item" onclick="switchClient('Lumina Health Care', 18450, 22400, '11.8%')">
+          <span>🩺 Lumina Health Care</span>
+          <span class="badge-count">2 Reports</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Create New Report with Claude -->
+  <div class="modal-overlay" id="new-report-modal" onclick="closeOnOutside(event, 'new-report-modal')">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Create New Client Report via Claude</h3>
+        <button class="icon-btn" onclick="closeModal('new-report-modal')">✕</button>
+      </div>
+      <div class="form-group">
+        <label>Client Name</label>
+        <input type="text" class="form-control" id="new-rep-client" value="TechCorp Global">
+      </div>
+      <div class="form-group">
+        <label>Report Period</label>
+        <input type="text" class="form-control" id="new-rep-month" value="November 2024">
+      </div>
+      <div class="form-group">
+        <label>Raw Metric Bullets (What you would type to Claude)</label>
+        <textarea class="form-control" rows="4" id="new-rep-bullets">
+Traffic reached 26,400 (+10%), revenue $17,200 (+11%), launched mobile gift guide, 4 new guest posts published. Next month: holiday sale prep and Core Web Vitals optimization.
+        </textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('new-report-modal')">Cancel</button>
+        <button class="btn-orange" onclick="generateReportFromModal()">Generate Report via Claude</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ================= SCRIPT LOGIC ================= -->
+  <script>
+    // Tab Switching
+    function switchMainTab(tabId) {
+      document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+      const target = document.getElementById('view-' + tabId);
+      if (target) target.classList.add('active');
+
+      const tabEl = document.getElementById('tab-' + tabId);
+      if (tabEl) tabEl.classList.add('active');
+
+      const navEl = document.getElementById('nav-' + (tabId === 'dashboard' ? 'dashboard' : tabId));
+      if (navEl) navEl.classList.add('active');
+
+      const titleMap = {
+        'dashboard': 'October 2024 Performance Report',
+        'archive': 'Past Monthly Reports Archive',
+        'mcp': 'Claude MCP Engine Console'
+      };
+      document.getElementById('page-title').innerText = titleMap[tabId] || 'Reportly';
+      showToast('Switched to ' + (titleMap[tabId] || tabId));
+    }
+
+    // Toast
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `<span>⚡</span> <span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 200);
+      }, 2500);
+    }
+
+    // Modal helpers
+    function openClientModal() {
+      document.getElementById('client-modal').classList.add('active');
+    }
+
+    function openNewReportModal() {
+      document.getElementById('new-report-modal').classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function closeOnOutside(e, id) {
+      if (e.target.id === id) document.getElementById(id).classList.remove('active');
+    }
+
+    // Client Switcher
+    function switchClient(name, traffic, rev, rate) {
+      document.getElementById('current-client-name').innerText = name;
+      document.getElementById('val-traffic').innerText = traffic.toLocaleString();
+      document.getElementById('val-revenue').innerText = '$' + rev.toLocaleString();
+      document.getElementById('val-rate').innerText = rate;
+      closeModal('client-modal');
+      showToast(`Switched active workspace to: ${name}`);
+    }
+
+    // Human Edit Mode Toggle
+    let isEditing = false;
+    function toggleEditMode() {
+      isEditing = !isEditing;
+      const btn = document.getElementById('btn-edit-toggle');
+      const label = document.getElementById('edit-mode-label');
+      const paragraphs = document.querySelectorAll('.editable-paragraph');
+
+      if (isEditing) {
+        label.innerText = 'Save Edits (Locked)';
+        btn.classList.remove('btn-secondary');
+        btn.classList.add('btn-orange');
+        paragraphs.forEach(p => {
+          p.style.background = '#fff8f4';
+          p.style.borderColor = '#ffcaa8';
+        });
+        showToast('Edit Mode Enabled: Click paragraphs to edit text.');
+      } else {
+        label.innerText = 'Edit Narrative';
+        btn.classList.remove('btn-orange');
+        btn.classList.add('btn-secondary');
+        paragraphs.forEach(p => {
+          p.style.background = '';
+          p.style.borderColor = 'transparent';
+        });
+        showToast('✓ Edits saved to Reportly SQLite database.');
+      }
+    }
+
+    // Client Preview Toggle
+    let isClientView = false;
+    function toggleClientPreview() {
+      isClientView = !isClientView;
+      const sidebar = document.querySelector('aside.sidebar');
+      const label = document.getElementById('preview-mode-label');
+
+      if (isClientView) {
+        sidebar.style.display = 'none';
+        label.innerText = 'Exit Client View';
+        showToast('Client Preview Mode: This is the clean link the client views on their phone/laptop.');
+      } else {
+        sidebar.style.display = 'flex';
+        label.innerText = 'Preview Client View';
+        showToast('Returned to Agency Account Manager mode.');
+      }
+    }
+
+    // Publish & Share
+    function publishAndCopyLink() {
+      const url = `https://reportly.live/r/techcorp-oct-2024`;
+      navigator.clipboard.writeText(url).catch(() => {});
+      showToast(`✓ Copied Live Client URL: ${url}`);
+    }
+
+    function copyClientLink(slug) {
+      const url = `https://reportly.live/r/techcorp-${slug}`;
+      navigator.clipboard.writeText(url).catch(() => {});
+      showToast(`Copied: ${url}`);
+    }
+
+    function exportReportPDF() {
+      showToast('Exporting executive report PDF with agency branding...');
+    }
+
+    // Interactive Bar Chart Selection
+    function selectBar(month, val, rate, xPos, el) {
+      document.querySelectorAll('.interactive-bar').forEach(b => {
+        b.setAttribute('fill', 'url(#diagonalHatch)');
+      });
+      el.setAttribute('fill', '#ff5c00');
+
+      const tooltip = document.getElementById('chart-tooltip');
+      document.getElementById('tooltip-month').innerText = month + ', 2024';
+      document.getElementById('tooltip-val-1').innerText = '$' + val.toLocaleString();
+      document.getElementById('tooltip-val-2').innerText = rate;
+
+      const pct = (xPos / 700) * 100;
+      tooltip.style.left = Math.min(Math.max(pct - 8, 5), 75) + '%';
+      showToast(`Inspecting ${month}: Revenue $${val.toLocaleString()} (Conv Rate ${rate})`);
+    }
+
+    // MCP Simulator Console
+    function simulateMcpReportGen() {
+      const stream = document.getElementById('mcp-log-stream');
+      const time = new Date().toTimeString().split(' ')[0];
+      const log = document.createElement('div');
+      log.className = 'log-line log-success';
+      log.innerText = `[${time}] → invoke_tool("create_client_report", {client: "TechCorp", month: "Nov 2024"}) => 200 OK: Report #43 created.`;
+      stream.appendChild(log);
+      stream.scrollTop = stream.scrollHeight;
+      showToast('MCP Tool: create_client_report executed successfully.');
+    }
+
+    function simulateMcpUpdateSection() {
+      const stream = document.getElementById('mcp-log-stream');
+      const time = new Date().toTimeString().split(' ')[0];
+      const log = document.createElement('div');
+      log.className = 'log-line log-info';
+      log.innerText = `[${time}] → invoke_tool("update_report_section", {report_id: 42, section: "Roadmap"}) => 200 OK.`;
+      stream.appendChild(log);
+      stream.scrollTop = stream.scrollHeight;
+      showToast('MCP Tool: update_report_section executed.');
+    }
+
+    function simulateClientViewEvent() {
+      const stream = document.getElementById('mcp-log-stream');
+      const time = new Date().toTimeString().split(' ')[0];
+      const log = document.createElement('div');
+      log.className = 'log-line log-success';
+      log.innerText = `[${time}] 👁️ Client Webhook: CEO viewed report at https://reportly.live/r/techcorp-oct-2024. Read-receipt logged.`;
+      stream.appendChild(log);
+      stream.scrollTop = stream.scrollHeight;
+      document.getElementById('read-receipt-pill').innerHTML = `<span>👁️</span> <span>Client Viewed Just Now</span>`;
+      showToast('Live Read-Receipt: Client opened the report link!');
+    }
+
+    function clearMcpLog() {
+      document.getElementById('mcp-log-stream').innerHTML = '<div class="log-line log-info">Log cleared. Ready for next MCP action.</div>';
+    }
+
+    function generateReportFromModal() {
+      const month = document.getElementById('new-rep-month').value;
+      closeModal('new-report-modal');
+      showToast(`Generating report for ${month} via Claude MCP...`);
+      setTimeout(() => {
+        document.getElementById('page-title').innerText = `${month} Performance Report`;
+        showToast(`✓ Report for ${month} created and loaded!`);
+      }, 1200);
+    }
+  </script>
+</body>
+</html>

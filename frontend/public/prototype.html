@@ -1,0 +1,2161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LaunchPulse — AI Go-to-Market (GTM) Engineer Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-body: #f8f9fb;
+      --bg-card: #ffffff;
+      --border-card: #eceef2;
+      --border-subtle: #f1f3f7;
+      --text-main: #111827;
+      --text-muted: #64748b;
+      --text-subtle: #94a3b8;
+      --orange-primary: #ff5c00;
+      --orange-hover: #e65200;
+      --orange-bg-subtle: #fff5ee;
+      --orange-tint-1: #ffe4d4;
+      --orange-tint-2: #ffd3bf;
+      --green-accent: #12b76a;
+      --green-bg: #ecfdf3;
+      --dark-card: #111827;
+      --radius-card: 18px;
+      --radius-sm: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ================= SIDEBAR ================= */
+    .sidebar {
+      width: 250px;
+      background: #ffffff;
+      border-right: 1px solid var(--border-card);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      min-height: 100vh;
+      padding: 20px 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .brand-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .brand-avatar {
+      width: 36px;
+      height: 36px;
+      background: var(--orange-primary);
+      color: #fff;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .brand-plan {
+      font-size: 11px;
+      color: var(--orange-primary);
+      font-weight: 600;
+    }
+
+    .btn-collapse {
+      background: none;
+      border: none;
+      color: var(--text-subtle);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px;
+      border-radius: 6px;
+    }
+    .btn-collapse:hover { background: var(--border-subtle); color: var(--text-main); }
+
+    /* Upload Product CTA Button */
+    .btn-upload-product {
+      width: 100%;
+      background: var(--orange-primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      margin: 18px 0 20px 0;
+      transition: background 0.15s ease, transform 0.1s ease;
+      box-shadow: 0 2px 6px rgba(255, 92, 0, 0.2);
+    }
+    .btn-upload-product:hover {
+      background: var(--orange-hover);
+      transform: translateY(-1px);
+    }
+
+    .sidebar-section {
+      margin-bottom: 22px;
+    }
+
+    .sidebar-heading {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-subtle);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+      padding-left: 10px;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #4b5563;
+      text-decoration: none;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s ease;
+    }
+
+    .nav-item:hover {
+      background: #f8f9fb;
+      color: var(--text-main);
+    }
+
+    .nav-item.active {
+      background: #ffffff;
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: -16px;
+      top: 6px;
+      bottom: 6px;
+      width: 3.5px;
+      border-radius: 0 4px 4px 0;
+      background: var(--orange-primary);
+    }
+
+    .nav-left-slot {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-icon {
+      width: 16px;
+      height: 16px;
+      color: #6b7280;
+    }
+    .nav-item.active .nav-icon { color: var(--orange-primary); }
+
+    .nav-badge {
+      font-size: 11px;
+      font-weight: 700;
+      background: #f1f3f7;
+      color: var(--text-muted);
+      padding: 2px 7px;
+      border-radius: 10px;
+    }
+
+    .color-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+    }
+    .dot-blue { background: #3b82f6; }
+    .dot-pink { background: #ec4899; }
+    .dot-orange { background: #ff5c00; }
+    .dot-green { background: #12b76a; }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 15px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .mcp-status-pill {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 9px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: all 0.15s ease;
+    }
+    .mcp-status-pill:hover { background: #dcfce7; }
+
+    .mcp-pill-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #166534;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #16a34a;
+      box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
+    }
+
+    /* ================= MAIN STAGE ================= */
+    .main-wrapper {
+      flex: 1;
+      padding: 24px 32px;
+      overflow-y: auto;
+      max-width: 1440px;
+    }
+
+    /* Top Header */
+    .top-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .header-left-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .page-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+    }
+
+    .product-badge-active {
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--orange-tint-1);
+      color: var(--orange-primary);
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Currency Switcher Pill */
+    .currency-pill-box {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 2px 4px;
+    }
+
+    .currency-btn {
+      background: none;
+      border: none;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .currency-btn.active {
+      background: var(--dark-card);
+      color: #ffffff;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #ffffff;
+      border: 1px solid var(--border-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.15s ease;
+    }
+    .icon-btn:hover { background: #f8f9fb; color: var(--text-main); }
+
+    .btn-white {
+      background: #ffffff;
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .btn-white:hover { background: #f8f9fb; }
+
+    .btn-dark {
+      background: #111827;
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .btn-dark:hover { background: #000000; }
+
+    /* Sub Navigation Controls */
+    .sub-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+
+    .tab-pills {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: 8px;
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .tab-btn:hover { color: var(--text-main); }
+    .tab-btn.active {
+      background: #ffffff;
+      border-color: var(--border-card);
+      color: var(--text-main);
+      font-weight: 700;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+
+    /* GTM Context Banner */
+    .gtm-context-card {
+      background: #ffffff;
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-card);
+      padding: 18px 22px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-left: 4px solid var(--orange-primary);
+    }
+
+    .gtm-context-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .gtm-context-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .gtm-context-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      max-width: 820px;
+    }
+
+    .gtm-context-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-gtm-action {
+      background: var(--orange-primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .btn-gtm-action:hover { background: var(--orange-hover); }
+
+    /* 4 Primary Top Metric Cards */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .metric-card {
+      background: #ffffff;
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-card);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 1px 2px rgba(16,24,40,0.02);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.04);
+    }
+
+    .metric-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .metric-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .metric-mid {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .metric-value {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .metric-sparkline {
+      width: 50px;
+      height: 28px;
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+    }
+
+    .spark-bar {
+      flex: 1;
+      background: var(--orange-tint-1);
+      border-radius: 2px 2px 0 0;
+    }
+    .spark-bar.active { background: var(--orange-primary); }
+
+    .metric-badge {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--green-accent);
+      background: var(--green-bg);
+      padding: 2px 6px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .metric-subtext {
+      font-size: 11px;
+      color: var(--text-subtle);
+      margin-left: 4px;
+    }
+
+    .metric-footer {
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 12px;
+      margin-top: 6px;
+    }
+
+    .see-details-link {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+    .see-details-link:hover { color: var(--orange-primary); }
+
+    /* Middle Analytics & Gauge Grid */
+    .middle-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .content-card {
+      background: #ffffff;
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-card);
+      padding: 22px;
+      box-shadow: 0 1px 2px rgba(16,24,40,0.02);
+    }
+
+    .card-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Speedometer Radial Gauge */
+    .gauge-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 0 20px 0;
+    }
+
+    .gauge-svg {
+      width: 220px;
+      height: 120px;
+      overflow: visible;
+    }
+
+    .gauge-center-text {
+      position: absolute;
+      top: 55px;
+      text-align: center;
+    }
+
+    .gauge-num {
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .gauge-plus {
+      font-size: 11px;
+      font-weight: 800;
+      background: var(--green-bg);
+      color: var(--green-accent);
+      padding: 2px 5px;
+      border-radius: 4px;
+      line-height: 1;
+    }
+
+    .gauge-sub {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-subtle);
+      margin-top: 2px;
+    }
+
+    .team-callout {
+      background: #f8f9fb;
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 10px;
+    }
+
+    .team-callout-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .team-callout-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .improve-score-link {
+      display: block;
+      text-align: center;
+      margin-top: 14px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .improve-score-link:hover { color: var(--orange-primary); }
+
+    /* 12-Month Hatched Bar Chart */
+    .chart-box {
+      height: 240px;
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      padding-top: 30px;
+      position: relative;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .chart-y-axis {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-subtle);
+      pointer-events: none;
+    }
+
+    .chart-columns {
+      margin-left: 35px;
+      display: flex;
+      flex: 1;
+      align-items: flex-end;
+      justify-content: space-between;
+      height: 100%;
+      padding-bottom: 24px;
+      position: relative;
+    }
+
+    .month-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      justify-content: flex-end;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .hatched-bar {
+      width: 28px;
+      border-radius: 6px 6px 0 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        #f1f3f7,
+        #f1f3f7 3px,
+        #ffffff 3px,
+        #ffffff 6px
+      );
+      border: 1.5px solid #eceef2;
+      transition: height 0.3s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .month-col:hover .hatched-bar {
+      border-color: var(--orange-tint-1);
+    }
+
+    .month-col.active .hatched-bar {
+      background: var(--orange-primary);
+      border-color: var(--orange-primary);
+      box-shadow: 0 4px 12px rgba(255, 92, 0, 0.25);
+    }
+
+    .month-label {
+      position: absolute;
+      bottom: -22px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-subtle);
+    }
+    .month-col.active .month-label {
+      color: var(--text-main);
+      font-weight: 800;
+    }
+
+    .chart-tooltip {
+      position: absolute;
+      top: 15px;
+      background: #111827;
+      color: #ffffff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+      font-size: 11px;
+      z-index: 10;
+      pointer-events: none;
+      transform: translateX(-50%);
+      transition: left 0.2s ease;
+    }
+
+    .tooltip-date {
+      color: var(--text-subtle);
+      font-weight: 700;
+      font-size: 10px;
+      margin-bottom: 4px;
+    }
+
+    .tooltip-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 2px;
+    }
+    .tooltip-val { font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; }
+
+    /* Bottom Row: Heatmap & Donut */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 16px;
+    }
+
+    .heatmap-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .heatmap-legend {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-subtle);
+    }
+
+    .legend-boxes {
+      display: flex;
+      gap: 3px;
+    }
+    .l-box { width: 12px; height: 12px; border-radius: 3px; }
+    .lb-1 { background: var(--orange-tint-1); }
+    .lb-2 { background: var(--orange-tint-2); }
+    .lb-3 { background: var(--orange-primary); }
+
+    .heatmap-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 6px;
+    }
+
+    .heatmap-th {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-subtle);
+      padding-bottom: 6px;
+      text-align: center;
+    }
+
+    .time-slot-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-subtle);
+      white-space: nowrap;
+      padding-right: 12px;
+      text-align: left;
+    }
+
+    .heat-pill {
+      height: 26px;
+      border-radius: 8px;
+      transition: transform 0.15s ease;
+      cursor: pointer;
+    }
+    .heat-pill:hover { transform: scale(1.05); }
+    .heat-lvl-0 { background: #f8f9fb; }
+    .heat-lvl-1 { background: var(--orange-tint-1); }
+    .heat-lvl-2 { background: var(--orange-tint-2); }
+    .heat-lvl-3 { background: var(--orange-primary); }
+
+    .donut-layout {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 15px 0 20px 0;
+    }
+
+    .donut-svg-box {
+      position: relative;
+      width: 120px;
+      height: 120px;
+    }
+
+    .donut-stats-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 14px;
+    }
+
+    .donut-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+
+    .donut-label-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .donut-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .dot-orange-solid { background: var(--orange-primary); }
+    .dot-orange-peach { background: var(--orange-tint-1); }
+
+    .donut-num {
+      font-weight: 800;
+      color: var(--text-main);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Distinct Dedicated Page Containers */
+    .page-view {
+      display: none;
+    }
+    .page-view.active-view {
+      display: block;
+      animation: fadeIn 0.15s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: #ffffff;
+      border-radius: var(--radius-card);
+      border: 1px solid var(--border-card);
+      overflow: hidden;
+      margin-top: 16px;
+    }
+    .data-table th {
+      background: #f8f9fb;
+      padding: 12px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-card);
+    }
+    .data-table td {
+      padding: 14px 16px;
+      font-size: 13px;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: #fafbfc; }
+
+    /* Modal / Action Dialog */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.45);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-backdrop.show { display: flex; }
+
+    .modal-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 26px;
+      width: 520px;
+      max-width: 92vw;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border-card);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: block;
+      margin-bottom: 6px;
+    }
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      color: var(--text-main);
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: var(--orange-primary);
+      box-shadow: 0 0 0 3px rgba(255, 92, 0, 0.1);
+    }
+
+    .toggle-group {
+      display: flex;
+      background: #f1f3f7;
+      border-radius: 10px;
+      padding: 3px;
+      margin-bottom: 16px;
+    }
+    .toggle-opt {
+      flex: 1;
+      text-align: center;
+      padding: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+    }
+    .toggle-opt.active {
+      background: #ffffff;
+      color: var(--text-main);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       SIDEBAR
+       ======================================================================== -->
+  <aside class="sidebar">
+    <div class="brand-box">
+      <div class="brand-left" onclick="navigateTo('products')">
+        <div class="brand-avatar">LP</div>
+        <div>
+          <div class="brand-title">LaunchPulse</div>
+          <div class="brand-plan">GTM Studio ⌵</div>
+        </div>
+      </div>
+      <button class="btn-collapse" title="Collapse Sidebar">«</button>
+    </div>
+
+    <!-- Upload Product CTA Button -->
+    <button class="btn-upload-product" onclick="openUploadProductModal()">
+      <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+      <span>+ Upload Product</span>
+    </button>
+
+    <!-- MAIN MENU -->
+    <div class="sidebar-section">
+      <div class="sidebar-heading">MAIN MENU</div>
+      <ul class="nav-list">
+        <li>
+          <a class="nav-item active" onclick="navigateTo('dashboard', this)">
+            <div class="nav-left-slot">
+              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+              <span>Dashboard</span>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" onclick="navigateTo('products', this)">
+            <div class="nav-left-slot">
+              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+              <span>Product</span>
+            </div>
+            <span class="nav-badge" id="productBadgeCount">2</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" onclick="navigateTo('sales', this)">
+            <div class="nav-left-slot">
+              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <span>Sales</span>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" onclick="navigateTo('orders', this)">
+            <div class="nav-left-slot">
+              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+              <span>Order</span>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" onclick="navigateTo('customers', this)">
+            <div class="nav-left-slot">
+              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+              <span>Customer</span>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" onclick="navigateTo('pricing', this)">
+            <div class="nav-left-slot">
+              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+              <span>Pricing Engine</span>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- WORKSPACE (The Core 3 GTM Pillars: Campaign, Product Plan, Report) -->
+    <div class="sidebar-section">
+      <div class="sidebar-heading">WORKSPACE</div>
+      <ul class="nav-list">
+        <li>
+          <a class="nav-item" onclick="navigateTo('campaigns', this)">
+            <div class="nav-left-slot">
+              <span class="color-dot dot-blue"></span>
+              <span>Campaign</span>
+            </div>
+            <span class="nav-badge" id="campaignsBadge">3</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" onclick="navigateTo('plans', this)">
+            <div class="nav-left-slot">
+              <span class="color-dot dot-pink"></span>
+              <span>Product Plan</span>
+            </div>
+            <span class="nav-badge" id="plansBadge">3</span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-item" onclick="navigateTo('reports', this)">
+            <div class="nav-left-slot">
+              <span class="color-dot dot-orange"></span>
+              <span>Report</span>
+            </div>
+            <span class="nav-badge" style="background: var(--orange-tint-1); color: var(--orange-primary);">AI</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- FOOTER: MCP Server Connected & Settings -->
+    <div class="sidebar-footer">
+      <div class="mcp-status-pill" onclick="navigateTo('mcp', this)" title="View MCP Server & Claude Desktop Tools">
+        <div class="mcp-pill-left">
+          <span class="pulse-dot"></span>
+          <span>MCP Server Connected</span>
+        </div>
+        <span style="font-size: 11px; color: #166534; font-weight: 800;">:8000</span>
+      </div>
+
+      <ul class="nav-list">
+        <li>
+          <a class="nav-item" onclick="navigateTo('settings', this)">
+            <div class="nav-left-slot">
+              <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+              <span>Settings</span>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       MAIN DASHBOARD STAGE
+       ======================================================================== -->
+  <main class="main-wrapper">
+
+    <!-- Top Header: ONLY Active Product, Currency Switcher, Bell, and Share -->
+    <header class="top-header">
+      <div class="header-left-title">
+        <h1 class="page-title" id="pageTitle">Dashboard</h1>
+        <span class="product-badge-active" onclick="navigateTo('products')">
+          <span class="color-dot dot-orange"></span>
+          <span id="activeProductLabel">ApexDesk Pro</span>
+        </span>
+      </div>
+
+      <div class="top-actions">
+        <!-- Multi-Currency Engine Pill -->
+        <div class="currency-pill-box">
+          <button class="currency-btn active" onclick="setCurrency('USD', '$', 1.0, this)">USD ($)</button>
+          <button class="currency-btn" onclick="setCurrency('INR', '₹', 83.2, this)">INR (₹)</button>
+          <button class="currency-btn" onclick="setCurrency('EUR', '€', 0.92, this)">EUR (€)</button>
+          <button class="currency-btn" onclick="setCurrency('GBP', '£', 0.79, this)">GBP (£)</button>
+        </div>
+
+        <!-- Share button -->
+        <button class="icon-btn" title="Share GTM Portal" onclick="copyShareLink()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+        </button>
+
+        <!-- Notification Bell -->
+        <button class="icon-btn" title="GTM Alerts" onclick="alert('🔔 GTM Notification: Target CAC maintained at $65. Peak launch window is Mon/Wed afternoons.')">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ===================================================================
+         PAGE 1: DASHBOARD VIEW
+         =================================================================== -->
+    <div id="view-dashboard" class="page-view active-view">
+      <div class="sub-bar">
+        <div class="tab-pills">
+          <button class="tab-btn active" onclick="switchSubTab(this, 'Overview')">Overview</button>
+          <button class="tab-btn" onclick="navigateTo('sales')">Sales</button>
+          <button class="tab-btn" onclick="navigateTo('orders')">Order</button>
+          <button class="tab-btn" onclick="navigateTo('pricing')">⚙ Pricing Engine</button>
+        </div>
+
+        <div class="right-tools">
+          <button class="btn-white" onclick="alert('Filtered: Current Q1 Launch Window')">
+            <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+            <span>Filter</span>
+          </button>
+
+          <button class="btn-dark" onclick="exportData()">
+            <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+            <span>Export Blueprint</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- GTM Context Banner -->
+      <div class="gtm-context-card">
+        <div class="gtm-context-left">
+          <div class="gtm-context-title">
+            <span>GTM Strategy Active:</span>
+            <span style="color: var(--orange-primary);" id="activeProductTitle">ApexDesk Pro — Q1 Launch GTM Blueprint</span>
+          </div>
+          <div class="gtm-context-desc" id="activeProductHook">
+            "The first solid bamboo standing desk engineered specifically for developers who refuse to compromise between ergonomic spinal health and cable-free aesthetics."
+          </div>
+        </div>
+        <div class="gtm-context-right">
+          <button class="btn-white" onclick="navigateTo('reports')">View Claude Report</button>
+          <button class="btn-gtm-action" onclick="navigateTo('pricing')">Simulate Pricing →</button>
+        </div>
+      </div>
+
+      <!-- 4 TOP METRIC CARDS -->
+      <section class="metrics-grid">
+        <article class="metric-card">
+          <div>
+            <div class="metric-top"><span class="metric-label">Active Sales</span></div>
+            <div class="metric-mid">
+              <span class="metric-value" id="cardSalesVal">$24,064</span>
+              <div class="metric-sparkline"><div class="spark-bar" style="height: 40%;"></div><div class="spark-bar" style="height: 60%;"></div><div class="spark-bar active" style="height: 100%;"></div></div>
+            </div>
+            <div><span class="metric-badge">↑ 12%</span><span class="metric-subtext">vs last month</span></div>
+          </div>
+          <div class="metric-footer"><a class="see-details-link" onclick="navigateTo('sales')">See Details →</a></div>
+        </article>
+
+        <article class="metric-card">
+          <div>
+            <div class="metric-top"><span class="metric-label">Product Revenue</span></div>
+            <div class="metric-mid">
+              <span class="metric-value" id="cardRevVal">$15,490</span>
+              <svg width="45" height="24" viewBox="0 0 45 24"><path d="M 0 18 Q 12 2, 22 14 T 45 4" fill="none" stroke="#ff5c00" stroke-width="2" stroke-linecap="round"></path></svg>
+            </div>
+            <div><span class="metric-badge">↑ 9%</span><span class="metric-subtext">vs last month</span></div>
+          </div>
+          <div class="metric-footer"><a class="see-details-link" onclick="navigateTo('sales')">See Details →</a></div>
+        </article>
+
+        <article class="metric-card">
+          <div>
+            <div class="metric-top"><span class="metric-label">Product Sold</span></div>
+            <div class="metric-mid">
+              <span class="metric-value" id="cardSoldVal">2,355</span>
+              <svg width="26" height="26" viewBox="0 0 36 36"><path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#ffe4d4" stroke-width="4"></path><path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831" fill="none" stroke="#ff5c00" stroke-width="4" stroke-linecap="round"></path></svg>
+            </div>
+            <div><span class="metric-badge">↑ 7%</span><span class="metric-subtext">vs last month</span></div>
+          </div>
+          <div class="metric-footer"><a class="see-details-link" onclick="navigateTo('orders')">See Details →</a></div>
+        </article>
+
+        <article class="metric-card">
+          <div>
+            <div class="metric-top"><span class="metric-label">Conversion Rate</span></div>
+            <div class="metric-mid">
+              <span class="metric-value" id="cardRateVal">12,5%</span>
+              <div style="display: flex; gap: 2px; align-items: flex-end; height: 24px;">
+                <div style="width: 3px; height: 8px; background: #ffd3bf; border-radius: 1px;"></div>
+                <div style="width: 3px; height: 16px; background: #ffd3bf; border-radius: 1px;"></div>
+                <div style="width: 3px; height: 24px; background: #ff5c00; border-radius: 1px;"></div>
+                <div style="width: 3px; height: 18px; background: #ffd3bf; border-radius: 1px;"></div>
+              </div>
+            </div>
+            <div><span class="metric-badge">↑ 2%</span><span class="metric-subtext">vs last month</span></div>
+          </div>
+          <div class="metric-footer"><a class="see-details-link" onclick="navigateTo('pricing')">See Details →</a></div>
+        </article>
+      </section>
+
+      <!-- MIDDLE SECTION -->
+      <section class="middle-grid">
+        <article class="content-card">
+          <div class="card-header-row"><span class="card-title">Sales Performance</span></div>
+          <div class="gauge-container">
+            <svg class="gauge-svg" viewBox="0 0 200 110">
+              <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#f1f3f7" stroke-width="16" stroke-linecap="round"></path>
+              <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#ff5c00" stroke-width="16" stroke-dasharray="251.2" stroke-dashoffset="45.2" stroke-linecap="round"></path>
+            </svg>
+            <div class="gauge-center-text">
+              <div class="gauge-num">82<span class="gauge-plus">+1</span></div>
+              <div class="gauge-sub">of 100 points</div>
+            </div>
+          </div>
+          <div class="team-callout">
+            <div class="team-callout-title">You're team is great! ✨</div>
+            <div class="team-callout-desc">The team is performing well above average, meeting or exceeding targets in several areas.</div>
+          </div>
+          <a class="improve-score-link" onclick="navigateTo('pricing')">Improve Your Score →</a>
+        </article>
+
+        <!-- 12-Month Hatched Bar Chart -->
+        <article class="content-card">
+          <div class="card-header-row">
+            <span class="card-title">Analytics Revenue Progression</span>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button class="btn-white" style="padding: 5px 10px; font-size: 11px;">Last Year ⌵</button>
+            </div>
+          </div>
+
+          <div class="chart-box">
+            <div class="chart-y-axis">
+              <span id="yAxis4">$4K</span><span id="yAxis3">$3K</span><span id="yAxis2">$2K</span><span id="yAxis1">$1K</span><span>0</span>
+            </div>
+
+            <div class="chart-columns" id="barChartColumns">
+              <div class="chart-tooltip" id="chartTooltip" style="left: 45.8%;">
+                <div class="tooltip-date" id="ttMonth">Jun, 2024</div>
+                <div class="tooltip-row"><span style="color: #94a3b8;">Revenue</span><span class="tooltip-val" id="ttRev">$2,766</span></div>
+                <div class="tooltip-row"><span style="color: #94a3b8;">Conv. Rate</span><span class="tooltip-val" id="ttRate">8.7%</span></div>
+              </div>
+
+              <!-- 12 Hatched Bars -->
+              <div class="month-col" onclick="selectMonth('Jan', 1840, '7.2%', this)"><div class="hatched-bar" id="bar-Jan" style="height: 42%;"></div><span class="month-label">Jan</span></div>
+              <div class="month-col" onclick="selectMonth('Feb', 2120, '7.8%', this)"><div class="hatched-bar" id="bar-Feb" style="height: 48%;"></div><span class="month-label">Feb</span></div>
+              <div class="month-col" onclick="selectMonth('Mar', 3450, '9.1%', this)"><div class="hatched-bar" id="bar-Mar" style="height: 78%;"></div><span class="month-label">Mar</span></div>
+              <div class="month-col" onclick="selectMonth('Apr', 2900, '8.4%', this)"><div class="hatched-bar" id="bar-Apr" style="height: 65%;"></div><span class="month-label">Apr</span></div>
+              <div class="month-col" onclick="selectMonth('May', 2200, '7.5%', this)"><div class="hatched-bar" id="bar-May" style="height: 50%;"></div><span class="month-label">May</span></div>
+              <div class="month-col active" onclick="selectMonth('Jun', 2766, '8.7%', this)"><div class="hatched-bar" id="bar-Jun" style="height: 70%;"></div><span class="month-label">Jun</span></div>
+              <div class="month-col" onclick="selectMonth('Jul', 1650, '6.9%', this)"><div class="hatched-bar" id="bar-Jul" style="height: 38%;"></div><span class="month-label">Jul</span></div>
+              <div class="month-col" onclick="selectMonth('Aug', 2300, '8.1%', this)"><div class="hatched-bar" id="bar-Aug" style="height: 52%;"></div><span class="month-label">Aug</span></div>
+              <div class="month-col" onclick="selectMonth('Sept', 2100, '7.9%', this)"><div class="hatched-bar" id="bar-Sept" style="height: 47%;"></div><span class="month-label">Sept</span></div>
+              <div class="month-col" onclick="selectMonth('Okt', 2450, '8.5%', this)"><div class="hatched-bar" id="bar-Okt" style="height: 55%;"></div><span class="month-label">Okt</span></div>
+              <div class="month-col" onclick="selectMonth('Nov', 2600, '8.9%', this)"><div class="hatched-bar" id="bar-Nov" style="height: 60%;"></div><span class="month-label">Nov</span></div>
+              <div class="month-col" onclick="selectMonth('Dec', 3100, '9.4%', this)"><div class="hatched-bar" id="bar-Dec" style="height: 72%;"></div><span class="month-label">Dec</span></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- BOTTOM SECTION -->
+      <section class="bottom-grid">
+        <article class="content-card">
+          <div class="heatmap-header">
+            <span class="card-title">Visit by Time</span>
+            <div class="heatmap-legend">
+              <span>0</span><div class="legend-boxes"><div class="l-box lb-1"></div><div class="l-box lb-2"></div><div class="l-box lb-3"></div></div><span>10,000+</span>
+            </div>
+          </div>
+
+          <table class="heatmap-table">
+            <thead><tr><th style="width: 100px;"></th><th class="heatmap-th">Mon</th><th class="heatmap-th">Tue</th><th class="heatmap-th">Wed</th><th class="heatmap-th">Thu</th><th class="heatmap-th">Fri</th><th class="heatmap-th">Set</th><th class="heatmap-th">Sun</th></tr></thead>
+            <tbody>
+              <tr><td class="time-slot-label">12 AM - 8 AM</td><td><div class="heat-pill heat-lvl-2"></div></td><td><div class="heat-pill heat-lvl-0"></div></td><td><div class="heat-pill heat-lvl-1"></div></td><td><div class="heat-pill heat-lvl-1"></div></td><td><div class="heat-pill heat-lvl-0"></div></td><td><div class="heat-pill heat-lvl-1"></div></td><td><div class="heat-pill heat-lvl-0"></div></td></tr>
+              <tr><td class="time-slot-label">8 AM - 4 PM</td><td><div class="heat-pill heat-lvl-3"></div></td><td><div class="heat-pill heat-lvl-1"></div></td><td><div class="heat-pill heat-lvl-3"></div></td><td><div class="heat-pill heat-lvl-2"></div></td><td><div class="heat-pill heat-lvl-1"></div></td><td><div class="heat-pill heat-lvl-2"></div></td><td><div class="heat-pill heat-lvl-3"></div></td></tr>
+              <tr><td class="time-slot-label">4 PM - 12 AM</td><td><div class="heat-pill heat-lvl-1"></div></td><td><div class="heat-pill heat-lvl-2"></div></td><td><div class="heat-pill heat-lvl-0"></div></td><td><div class="heat-pill heat-lvl-0"></div></td><td><div class="heat-pill heat-lvl-3"></div></td><td><div class="heat-pill heat-lvl-1"></div></td><td><div class="heat-pill heat-lvl-2"></div></td></tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="content-card">
+          <div class="card-header-row"><span class="card-title">Total Visit</span></div>
+          <div style="font-size: 26px; font-weight: 800; color: var(--text-main); font-variant-numeric: tabular-nums;">191,886</div>
+          <div style="margin-top: 4px;"><span class="metric-badge">↑ 8.5%</span><span class="metric-subtext">vs last month</span></div>
+
+          <div class="donut-layout">
+            <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">Traffic attribution split by device channel.</div>
+            <div class="donut-svg-box">
+              <svg width="120" height="120" viewBox="0 0 42 42">
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#ffe4d4" stroke-width="6.5"></circle>
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#ff5c00" stroke-width="6.5" stroke-dasharray="60 40" stroke-dashoffset="25"></circle>
+              </svg>
+              <div style="position: absolute; top: 72px; right: 12px; font-size: 10px; font-weight: 800; color: #fff; background: var(--dark-card); padding: 2px 6px; border-radius: 4px;">60%</div>
+              <div style="position: absolute; top: 12px; right: 10px; font-size: 10px; font-weight: 800; color: #111827; background: #ffffff; padding: 2px 5px; border-radius: 4px; border: 1px solid var(--border-card);">40%</div>
+            </div>
+          </div>
+
+          <div class="donut-stats-list">
+            <div class="donut-row"><div class="donut-label-box"><span class="donut-dot dot-orange-solid"></span><span>Mobile</span></div><span class="donut-num">115,132</span></div>
+            <div class="donut-row"><div class="donut-label-box"><span class="donut-dot dot-orange-peach"></span><span>Website</span></div><span class="donut-num">76,754</span></div>
+          </div>
+        </article>
+      </section>
+    </div>
+
+    <!-- ===================================================================
+         PAGE 2: DEDICATED CAMPAIGN PLAN VIEW (WORKSPACE)
+         =================================================================== -->
+    <div id="view-campaigns" class="page-view">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div>
+          <h2 style="font-size: 18px; font-weight: 800;">GTM Campaign Execution Plans</h2>
+          <p style="font-size: 12px; color: var(--text-muted);">Generated by Claude via MCP. Click "Implement Campaign" to execute and dynamically lift the sales curve by +15%.</p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px;" id="campaignsContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- ===================================================================
+         PAGE 3: DEDICATED PRODUCT PLAN VIEW (WORKSPACE)
+         =================================================================== -->
+    <div id="view-plans" class="page-view">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div>
+          <h2 style="font-size: 18px; font-weight: 800;">3-Tier Product Architecture & Roadmap</h2>
+          <p style="font-size: 12px; color: var(--text-muted);">Packaging tiers, unit margin structures, and product release phases.</p>
+        </div>
+        <button class="btn-dark" onclick="implementProductPlan()">Implement Tier Pricing</button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;" id="productPlansContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- ===================================================================
+         PAGE 4: DEDICATED CLAUDE REPORTS VIEW (WORKSPACE)
+         =================================================================== -->
+    <div id="view-reports" class="page-view">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div>
+          <h2 style="font-size: 18px; font-weight: 800;">Claude GTM Strategic Dossier</h2>
+          <p style="font-size: 12px; color: var(--text-muted);">Formulated by Claude Desktop via MCP • In-place human editing enabled.</p>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-gtm-action" onclick="implementReportStrategy()">Implement Report Recommendations</button>
+          <button class="btn-dark" onclick="alert('✅ Client Share Link copied! Real-time read-receipt tracking enabled.')">Share Client Link</button>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;" id="reportSectionsContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- ===================================================================
+         PAGE 5: DEDICATED PRODUCTS CATALOG VIEW
+         =================================================================== -->
+    <div id="view-products" class="page-view">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div>
+          <h2 style="font-size: 18px; font-weight: 800;">Client Product Workspaces</h2>
+          <p style="font-size: 12px; color: var(--text-muted);">Switch between your client products or send new products via Claude Desktop MCP.</p>
+        </div>
+        <button class="btn-dark" onclick="openUploadProductModal()">+ Upload Product</button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;" id="productsCatalogGrid"></div>
+    </div>
+
+    <!-- ===================================================================
+         PAGE 6: SALES VIEW
+         =================================================================== -->
+    <div id="view-sales" class="page-view">
+      <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Sales Diagnostics & Channel Breakdown</h2>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Conversion velocity and CAC pacing across channels.</p>
+      <table class="data-table">
+        <thead><tr><th>Channel</th><th>Visitors</th><th>Conversions</th><th>Conv. Rate</th><th>Attributed Revenue</th><th>Blended CAC</th></tr></thead>
+        <tbody>
+          <tr><td><b>Meta Paid Ads (Instagram / FB)</b></td><td>11,420</td><td>1,420</td><td><span class="metric-badge">12.4%</span></td><td id="salesTblRev1"><b>$10,240.00</b></td><td>$42.10</td></tr>
+          <tr><td><b>Google Search (High Intent)</b></td><td>6,890</td><td>640</td><td><span class="metric-badge">9.3%</span></td><td id="salesTblRev2"><b>$3,850.00</b></td><td>$38.40</td></tr>
+          <tr><td><b>YouTube Creator Seeding</b></td><td>3,450</td><td>215</td><td><span class="metric-badge">6.2%</span></td><td id="salesTblRev3"><b>$1,120.00</b></td><td>$25.00</td></tr>
+          <tr><td><b>Direct & Organic Referrals</b></td><td>2,304</td><td>80</td><td><span class="metric-badge">3.5%</span></td><td id="salesTblRev4"><b>$280.00</b></td><td>$0.00</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ===================================================================
+         PAGE 7: ORDERS VIEW
+         =================================================================== -->
+    <div id="view-orders" class="page-view">
+      <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Order Pipeline & Volume Tracking</h2>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Real-time fulfillment stages for 2,355 processed units.</p>
+      <table class="data-table">
+        <thead><tr><th>Order ID</th><th>Customer / Company</th><th>Tier</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>#ORD-9021</td><td>Stripe Dev Lab</td><td>Developer Edition</td><td class="order-amt-1">$389.00</td><td>Today, 1:40 PM</td><td><span class="metric-badge">Shipped</span></td></tr>
+          <tr><td>#ORD-9020</td><td>Vercel Partner Studio</td><td>Team Pack</td><td class="order-amt-2">$1,499.00</td><td>Today, 11:15 AM</td><td><span class="metric-badge">Processing</span></td></tr>
+          <tr><td>#ORD-9019</td><td>David Miller (Creator)</td><td>Developer Edition</td><td class="order-amt-1">$389.00</td><td>Yesterday</td><td><span class="metric-badge">Delivered</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ===================================================================
+         PAGE 8: CUSTOMERS (ICP) VIEW
+         =================================================================== -->
+    <div id="view-customers" class="page-view">
+      <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Ideal Customer Profile (ICP) & Persona Matrix</h2>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Formulated by Claude via MCP to target high-willingness-to-pay buyers.</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <article class="content-card">
+          <div class="card-title" style="margin-bottom: 10px;"><span class="color-dot dot-orange"></span>Primary Persona: The Deep-Work Engineer</div>
+          <div style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+            <p><b>Demographics:</b> Age 26–42, Tech Lead or Senior Software Engineer, $120k+ salary, working remote 4+ days/week.</p>
+            <p style="color: #e11d48; margin-top: 8px;"><b>Core Pain:</b> Severe 3 PM lumbar spine fatigue and stiffness. Frustrated by wobbly particle-board desks and messy tangled wire clutter.</p>
+            <p style="color: #12b76a; margin-top: 8px;"><b>Willingness to Pay:</b> <span class="cust-wtp-1">$350 – $450</span> with company hardware stipend.</p>
+          </div>
+        </article>
+        <article class="content-card">
+          <div class="card-title" style="margin-bottom: 10px;"><span class="color-dot dot-blue"></span>Secondary Persona: The Aesthetic Studio Creator</div>
+          <div style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+            <p><b>Demographics:</b> Age 24–36, UI/UX Designer, YouTuber, Creative Director, high visual taste standard.</p>
+            <p style="color: #e11d48; margin-top: 8px;"><b>Core Pain:</b> Industrial black steel standing desks look clinical and ugly on camera and in social media photos.</p>
+            <p style="color: #12b76a; margin-top: 8px;"><b>Willingness to Pay:</b> <span class="cust-wtp-2">$400 – $550</span> for solid organic bamboo surfaces with wireless built-in Qi chargers.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- ===================================================================
+         PAGE 9: PRICING ENGINE
+         =================================================================== -->
+    <div id="view-pricing" class="page-view">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div>
+          <h2 style="font-size: 18px; font-weight: 800;">Dynamic Pricing & Unit Economics Engine</h2>
+          <p style="font-size: 12px; color: var(--text-muted);">Drag the slider to dynamically recalculate gross margins and re-render the 12-month revenue curve in real-time.</p>
+        </div>
+        <button class="btn-dark" onclick="saveActivePrice()">Commit Pricing Strategy</button>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid var(--border-card); border-radius: var(--radius-card); padding: 22px; margin-bottom: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px;">
+          <div style="background: #f8f9fb; padding: 14px; border-radius: 12px; border: 1px solid var(--border-card);">
+            <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Retail Price</span>
+            <div style="font-size: 24px; font-weight: 800; color: var(--orange-primary);" id="enginePriceVal">$389</div>
+          </div>
+          <div style="background: #f8f9fb; padding: 14px; border-radius: 12px; border: 1px solid var(--border-card);">
+            <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Manufacturing Unit Cost</span>
+            <div style="font-size: 24px; font-weight: 800; color: var(--text-main);" id="engineCostVal">$140</div>
+          </div>
+          <div style="background: #f8f9fb; padding: 14px; border-radius: 12px; border: 1px solid var(--border-card);">
+            <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Gross Margin</span>
+            <div style="font-size: 24px; font-weight: 800; color: #12b76a;" id="engineMarginVal">64.0%</div>
+          </div>
+          <div style="background: #f8f9fb; padding: 14px; border-radius: 12px; border: 1px solid var(--border-card);">
+            <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">CAC Payback Period</span>
+            <div style="font-size: 24px; font-weight: 800; color: var(--text-main);" id="enginePaybackVal">12 days</div>
+          </div>
+        </div>
+
+        <div style="background: #fff9f5; border: 1px solid #ffd3bf; padding: 16px; border-radius: 14px;">
+          <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; margin-bottom: 8px;">
+            <span>Drag to Adjust Retail Price:</span>
+            <span style="color: var(--orange-primary);" id="sliderValDisplay">$389</span>
+          </div>
+          <input type="range" min="199" max="699" step="10" value="389" style="width: 100%; height: 6px; accent-color: var(--orange-primary); cursor: pointer;" oninput="onPriceSliderChange(this.value)">
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================================
+         PAGE 10: MCP SERVER STATUS VIEW
+         =================================================================== -->
+    <div id="view-mcp" class="page-view">
+      <div style="background: #ffffff; border: 1px solid var(--border-card); border-radius: var(--radius-card); padding: 24px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+          <span class="pulse-dot"></span>
+          <h2 style="font-size: 18px; font-weight: 800; color: #166534;">Model Context Protocol (MCP) Live Status</h2>
+        </div>
+        <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+          Strict Zero-AI Invariant: There is <b>zero AI code, zero OpenAI/Anthropic API keys, and zero LLM wrappers</b> inside this web application. Claude Desktop connects externally via standard JSON-RPC stdio.
+        </p>
+
+        <div style="background: #111827; color: #ffffff; padding: 16px; border-radius: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; margin-bottom: 16px;">
+          <span style="color: #12b76a;">● STATUS: ACTIVE & RUNNING</span><br>
+          <span style="color: #94a3b8;">Port: 8000 | Transport: stdio | Protocol: MCP 2.0</span><br><br>
+          <span style="color: #ff5c00;">[EXPOSED GTM TOOLS TO CLAUDE DESKTOP]</span><br>
+          1. create_gtm_product(name, cost, target_price, is_existing_product)<br>
+          2. generate_campaign_plan(product_id, title, channel, cpa, lift_pct)<br>
+          3. generate_product_plan(product_id, tier_name, price, features)<br>
+          4. generate_gtm_report(product_id, sections)<br>
+          5. implement_gtm_strategy(product_id, campaign_id)
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================================
+         PAGE 11: SETTINGS VIEW
+         =================================================================== -->
+    <div id="view-settings" class="page-view">
+      <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Workspace Settings</h2>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Manage workspace defaults, team permissions, and MCP ports.</p>
+      <div style="background: #ffffff; border: 1px solid var(--border-card); border-radius: var(--radius-card); padding: 22px; max-width: 600px;">
+        <div class="form-group"><label class="form-label">Studio Name</label><input type="text" class="form-input" value="LaunchPulse GTM Studio"></div>
+        <div class="form-group"><label class="form-label">Default Currency</label><select class="form-select" onchange="setCurrency(this.value, this.value === 'INR' ? '₹' : this.value === 'EUR' ? '€' : this.value === 'GBP' ? '£' : '$', this.value === 'INR' ? 83.2 : this.value === 'EUR' ? 0.92 : this.value === 'GBP' ? 0.79 : 1.0)"><option value="USD">USD ($)</option><option value="INR">INR (₹)</option><option value="EUR">EUR (€)</option><option value="GBP">GBP (£)</option></select></div>
+        <div class="form-group"><label class="form-label">MCP Server Port</label><input type="number" class="form-input" value="8000" disabled></div>
+        <button class="btn-dark" onclick="alert('Settings saved successfully!')">Save Preferences</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ========================================================================
+       MODAL DIALOG (For Uploading Products & Onboarding)
+       ======================================================================== -->
+  <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 id="modalTitle" style="font-size: 16px; font-weight: 800; color: var(--text-main);">Upload Product</h3>
+        <button onclick="closeModal()" style="background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-subtle);">✕</button>
+      </div>
+      <div id="modalBody"></div>
+      <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 8px;" id="modalActions">
+        <button class="btn-white" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       APPLICATION LOGIC & MULTI-CURRENCY ENGINE
+       ======================================================================== -->
+  <script>
+    // Multi-Currency State
+    let currentCurrency = 'USD';
+    let currencySymbol = '$';
+    let currencyRate = 1.0;
+
+    function setCurrency(code, symbol, rate, el) {
+      currentCurrency = code;
+      currencySymbol = symbol;
+      currencyRate = rate;
+
+      document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
+      if (el) el.classList.add('active');
+
+      updateAllCurrencyValues();
+    }
+
+    function formatMoney(amountUSD) {
+      const converted = amountUSD * currencyRate;
+      if (currentCurrency === 'INR') {
+        return '₹' + Math.round(converted).toLocaleString('en-IN');
+      }
+      return currencySymbol + Math.round(converted).toLocaleString();
+    }
+
+    // Product Database
+    let products = [
+      {
+        id: 1,
+        name: "ApexDesk Pro",
+        industry: "Ergonomic Hardware & Workspace Tech",
+        hook: "The first solid bamboo standing desk engineered specifically for developers who refuse to compromise between ergonomic spinal health and cable-free aesthetics.",
+        price: 389,
+        cost: 140,
+        margin: 64.0,
+        score: 82,
+        activeSales: 24064,
+        revenue: 15490,
+        sold: 2355,
+        rate: "12.5%",
+        curve: [42, 48, 78, 65, 50, 70, 38, 52, 47, 55, 60, 72],
+        campaigns: [
+          { id: 1, title: "Creator & Reviewer Desk Seeding", type: "Creator", budget: 1500, cpa: 45, lift: 18, status: "active", tactic: "Ship 15 seed units to developer YouTubers for unsponsored ergonomic desk tours.", timeline: "Week 1-2" },
+          { id: 2, title: "Hacker News & Reddit Build-Log Drops", type: "Organic", budget: 0, cpa: 0, lift: 12, status: "implemented", tactic: "Authentic mechanical walkthrough of dual whisper-motors and magnetic cable spine on r/battlestations.", timeline: "Week 2-3" },
+          { id: 3, title: "Meta & TikTok Video Retargeting", type: "Paid", budget: 3000, cpa: 65, lift: 22, status: "draft", tactic: "15-second silent video ads showcasing the 100W wireless Qi charging pad built into the solid bamboo desktop.", timeline: "Week 3-4" }
+        ],
+        plans: [
+          { id: 1, name: "Essential Core", price: 319, hero: false, features: ["Solid Bamboo Desktop (48x30)", "Dual Whisper Motors", "3-Year Warranty"], target: "Budget-conscious remote workers", phase: "Phase 1: Launch" },
+          { id: 2, name: "Developer Edition", price: 389, hero: true, features: ["Solid Bamboo Desktop (60x30)", "Dual Whisper Motors", "Integrated 100W Wireless Qi Charging Pad", "Magnetic Undermount Cable Spine", "5-Year Full Warranty"], target: "Full-time software engineers & tech creators", phase: "Phase 1: Launch" },
+          { id: 3, name: "Team Studio 4-Pack", price: 1499, hero: false, features: ["4x Developer Edition Desks", "Dedicated Account Manager", "White-glove Office Setup", "10-Year Commercial Warranty"], target: "Seed/Series A Startups & Coworking Hubs", phase: "Phase 2: B2B Expansion" }
+        ],
+        reports: [
+          { id: 1, title: "1. Executive Summary & Market Fit", content: "ApexDesk Pro enters the market at an ideal inflection point where corporate remote work policies have stabilized, but developer ergonomic dissatisfaction remains high. Positioning the solid bamboo aesthetic alongside integrated 100W Qi wireless charging differentiates the brand from generic clinical standing desks, capturing mid-career engineers seeking a distraction-free cable setup." },
+          { id: 2, title: "2. Unit Economics & Pricing Elasticity", content: "At a target retail price of $389 and manufacturing cost of $140, the product yields a 64.0% gross margin. This affords a target customer acquisition cost (CAC) of up to $65 on paid channels while maintaining a 12-day cash payback velocity. Recommended 3-tier architecture: Essential ($319), Developer Edition ($389), and Team Studio 4-Pack ($1,499)." },
+          { id: 3, title: "3. 30-Day Channel Execution Roadmap", content: "• Week 1: Authentic developer build-log drops on Reddit r/battlestations and Hacker News.\n• Week 2: Ship 15 seed units to developer YouTubers (The Primeagen, Typecraft) for unsponsored setup reviews.\n• Week 3: Direct B2B outreach to HR/Ops leads at Series A/B tech startups for 15% team stipend discounts.\n• Week 4: Scale Meta retargeting ads featuring 15-second silent cable-management demonstrations." }
+        ]
+      },
+      {
+        id: 2,
+        name: "Lumina Sleep Mask",
+        industry: "Health & Sleep Tech D2C",
+        hook: "Biometric blackout sleep mask with adaptive binaural soundscapes engineered to induce REM sleep in under 12 minutes.",
+        price: 179,
+        cost: 52,
+        margin: 70.9,
+        score: 92,
+        activeSales: 38420,
+        revenue: 29180,
+        sold: 1840,
+        rate: "14.2%",
+        curve: [35, 50, 65, 75, 85, 92, 70, 80, 88, 95, 100, 110],
+        campaigns: [
+          { id: 4, title: "Biohacker & Oura Ring Community Outreach", type: "Organic", budget: 0, cpa: 0, lift: 20, status: "implemented", tactic: "Community discussions on sleep latency reduction and deep sleep phase tracking.", timeline: "Week 1-2" },
+          { id: 5, title: "Huberman Lab Wellness Podcast Sponsorship", type: "Paid", budget: 4500, cpa: 42, lift: 28, status: "active", tactic: "Host-read mid-roll endorsement targeting executives with chronic 3 AM cortisol spikes.", timeline: "Week 3-4" }
+        ],
+        plans: [
+          { id: 4, name: "Core Blackout", price: 129, hero: false, features: ["Zero-pressure Eye Cavities", "100% Total Blackout Foam", "Washable Silk Cover"], target: "Travelers & Light Sleepers", phase: "Phase 1: Direct" },
+          { id: 5, name: "Biometric Audio Edition", price: 179, hero: true, features: ["Integrated Bone Conduction Speakers", "Adaptive Binaural Soundscapes", "Cortisol Spike Sensor", "1-Year App Access"], target: "Biohackers & Stressed Executives", phase: "Phase 1: Direct" }
+        ],
+        reports: [
+          { id: 4, title: "1. Performance Bottleneck Diagnosis", content: "Lumina generated $29,180 in monthly product revenue, but experienced a mild 4.2% drop-off during checkout for international customers due to lack of local currency support. Implementing dynamic currency localization (INR, EUR, GBP) is projected to recapture $6,200/mo in lost sales." },
+          { id: 5, title: "2. Scale & Remarketing Economics", content: "At $179 retail price and $52 cost, the 70.9% gross margin allows high-ticket podcast sponsorships while maintaining positive cash flow. Recommendation: Seed units to wellness physicians and sleep coaches." }
+        ]
+      }
+    ];
+
+    let currentProductIndex = 0;
+
+    function navigateTo(viewId, el) {
+      document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active-view'));
+      const target = document.getElementById('view-' + viewId);
+      if (target) target.classList.add('active-view');
+
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      if (el) el.classList.add('active');
+
+      const titleMap = {
+        'dashboard': 'Dashboard',
+        'campaigns': 'Campaign Plans',
+        'plans': 'Product Plans',
+        'reports': 'Claude Reports',
+        'products': 'Product Catalog',
+        'sales': 'Sales Diagnostics',
+        'orders': 'Order Pipeline',
+        'customers': 'Customer Personas (ICP)',
+        'pricing': 'Dynamic Pricing Engine',
+        'mcp': 'MCP Server Connection',
+        'settings': 'Settings'
+      };
+      document.getElementById('pageTitle').textContent = titleMap[viewId] || 'Dashboard';
+
+      if (viewId === 'campaigns') renderCampaignsPage();
+      if (viewId === 'plans') renderProductPlansPage();
+      if (viewId === 'reports') renderReportsPage();
+      if (viewId === 'products') renderProductsCatalog();
+      if (viewId === 'pricing') updatePricingEngineView();
+    }
+
+    function switchSubTab(el, name) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    function selectMonth(month, rev, rate, el) {
+      document.querySelectorAll('#barChartColumns .month-col').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+
+      const tt = document.getElementById('chartTooltip');
+      const offset = el.offsetLeft + (el.offsetWidth / 2);
+      tt.style.left = offset + "px";
+
+      document.getElementById('ttMonth').textContent = month + ", 2024";
+      document.getElementById('ttRev').textContent = formatMoney(rev);
+      document.getElementById('ttRate').textContent = rate;
+    }
+
+    function copyShareLink() {
+      navigator.clipboard.writeText(window.location.href);
+      alert("🔗 Live public GTM Blueprint link copied to clipboard (Read receipts tracking enabled)!");
+    }
+
+    function exportData() {
+      alert("📥 Exporting GTM Blueprint: Pricing Model, ICP Personas, 30-Day Channel Roadmap & Analytics CSV Dossier...");
+    }
+
+    /* Update All Currency Numbers in Real Time */
+    function updateAllCurrencyValues() {
+      const p = products[currentProductIndex];
+      document.getElementById('cardSalesVal').textContent = formatMoney(p.activeSales);
+      document.getElementById('cardRevVal').textContent = formatMoney(p.revenue);
+      document.getElementById('enginePriceVal').textContent = formatMoney(p.price);
+      document.getElementById('engineCostVal').textContent = formatMoney(p.cost);
+      document.getElementById('sliderValDisplay').textContent = formatMoney(p.price);
+
+      // Y Axis
+      document.getElementById('yAxis4').textContent = formatMoney(4000);
+      document.getElementById('yAxis3').textContent = formatMoney(3000);
+      document.getElementById('yAxis2').textContent = formatMoney(2000);
+      document.getElementById('yAxis1').textContent = formatMoney(1000);
+
+      // Tables
+      if (document.getElementById('salesTblRev1')) {
+        document.getElementById('salesTblRev1').innerHTML = `<b>${formatMoney(10240)}</b>`;
+        document.getElementById('salesTblRev2').innerHTML = `<b>${formatMoney(3850)}</b>`;
+        document.getElementById('salesTblRev3').innerHTML = `<b>${formatMoney(1120)}</b>`;
+        document.getElementById('salesTblRev4').innerHTML = `<b>${formatMoney(280)}</b>`;
+      }
+      document.querySelectorAll('.order-amt-1').forEach(td => td.textContent = formatMoney(389));
+      document.querySelectorAll('.order-amt-2').forEach(td => td.textContent = formatMoney(1499));
+      document.querySelectorAll('.cust-wtp-1').forEach(td => td.textContent = `${formatMoney(350)} – ${formatMoney(450)}`);
+      document.querySelectorAll('.cust-wtp-2').forEach(td => td.textContent = `${formatMoney(400)} – ${formatMoney(550)}`);
+
+      // Re-render pages if active
+      renderCampaignsPage();
+      renderProductPlansPage();
+    }
+
+    /* ================= WORKSPACE TAB 1: CAMPAIGNS ================= */
+    function renderCampaignsPage() {
+      const p = products[currentProductIndex];
+      const container = document.getElementById('campaignsContainer');
+      if (!container) return;
+
+      let html = '';
+      p.campaigns.forEach((c) => {
+        const isImpl = c.status === 'implemented';
+        html += `
+          <div style="background: #ffffff; border: 1.5px solid ${isImpl ? '#12b76a' : 'var(--border-card)'}; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                <span style="font-size: 11px; font-weight: 700; color: var(--orange-primary); background: var(--orange-tint-1); padding: 2px 8px; border-radius: 12px;">${c.type}</span>
+                <span style="font-size: 11px; font-weight: 800; color: ${isImpl ? '#12b76a' : '#64748b'};">${isImpl ? '✓ Implemented' : c.status.toUpperCase()}</span>
+              </div>
+              <h3 style="font-size: 15px; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">${c.title}</h3>
+              <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;">${c.tactic}</p>
+            </div>
+
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 12px; border-top: 1px solid var(--border-subtle); padding: 10px 0; margin-bottom: 12px;">
+                <span>Budget: <b>${c.budget > 0 ? formatMoney(c.budget) : 'Organic ($0)'}</b></span>
+                <span>Target CPA: <b>${formatMoney(c.cpa)}</b></span>
+                <span style="color: #12b76a;">Projected Lift: <b>+${c.lift}%</b></span>
+              </div>
+              <button class="${isImpl ? 'btn-white' : 'btn-gtm-action'}" style="width: 100%; justify-content: center;" onclick="implementCampaignAction(${c.id}, ${c.lift})">
+                ${isImpl ? 'Re-Apply Campaign Lift' : 'Implement Campaign & Shift Graph →'}
+              </button>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function implementCampaignAction(campId, liftPct) {
+      const p = products[currentProductIndex];
+      const camp = p.campaigns.find(c => c.id === campId);
+      if (camp) camp.status = 'implemented';
+
+      // Dynamically lift the 12-month graph bars by +15%
+      p.curve = p.curve.map(v => Math.min(100, Math.round(v * 1.15)));
+      p.activeSales = Math.round(p.activeSales * 1.15);
+      p.revenue = Math.round(p.revenue * 1.15);
+
+      updateAllCurrencyValues();
+      renderCurveBars();
+      renderCampaignsPage();
+      alert(`🚀 Campaign Implemented! 12-month revenue progression shifted upward by +${liftPct}%. Check the Dashboard!`);
+      navigateTo('dashboard');
+    }
+
+    /* ================= WORKSPACE TAB 2: PRODUCT PLANS ================= */
+    function renderProductPlansPage() {
+      const p = products[currentProductIndex];
+      const container = document.getElementById('productPlansContainer');
+      if (!container) return;
+
+      let html = '';
+      p.plans.forEach((pl) => {
+        html += `
+          <div style="background: #ffffff; border: 1.5px solid ${pl.hero ? 'var(--orange-primary)' : 'var(--border-card)'}; border-radius: 16px; padding: 22px; position: relative;">
+            ${pl.hero ? '<span style="position: absolute; top: -10px; right: 16px; background: var(--orange-primary); color: #fff; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 12px; text-transform: uppercase;">Hero Tier</span>' : ''}
+            <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main);">${pl.name}</h3>
+            <div style="font-size: 24px; font-weight: 800; color: var(--text-main); margin: 6px 0;">${formatMoney(pl.price)}</div>
+            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 14px;">${pl.target}</p>
+            <div style="border-top: 1px solid var(--border-subtle); padding-top: 12px; margin-bottom: 14px;">
+              <ul style="list-style: none; font-size: 12px; color: #334155; display: flex; flex-direction: column; gap: 6px;">
+                ${pl.features.map(f => `<li>✓ ${f}</li>`).join('')}
+              </ul>
+            </div>
+            <button class="${pl.hero ? 'btn-dark' : 'btn-white'}" style="width: 100%; justify-content: center;" onclick="alert('Tier details locked. Use Pricing Engine to simulate price adjustments.')">
+              Tier Configured
+            </button>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function implementProductPlan() {
+      alert("✅ Product Tier Architecture implemented into checkout & pricing engine.");
+    }
+
+    /* ================= WORKSPACE TAB 3: CLAUDE REPORTS ================= */
+    function renderReportsPage() {
+      const p = products[currentProductIndex];
+      const container = document.getElementById('reportSectionsContainer');
+      if (!container) return;
+
+      let html = '';
+      p.reports.forEach((r) => {
+        html += `
+          <article class="content-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h3 style="font-size: 14px; font-weight: 800; color: var(--text-main);">${r.title}</h3>
+              <button class="btn-white" style="padding: 4px 8px; font-size: 11px;" onclick="enableReportEdit(${r.id})">Edit</button>
+            </div>
+            <p id="rep-sec-${r.id}" style="font-size: 13px; color: #475569; line-height: 1.6;">${r.content.replace(/\n/g, '<br>')}</p>
+          </article>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function enableReportEdit(id) {
+      const el = document.getElementById('rep-sec-' + id);
+      const text = el.innerText;
+      el.innerHTML = `
+        <textarea id="edit-rep-val-${id}" style="width: 100%; border: 1px solid var(--orange-primary); border-radius: 8px; padding: 10px; font-size: 12px; font-family: inherit;" rows="4">${text}</textarea>
+        <div style="margin-top: 6px; display: flex; justify-content: flex-end; gap: 6px;">
+          <button class="btn-white" style="padding: 4px 8px; font-size: 11px;" onclick="renderReportsPage()">Cancel</button>
+          <button class="btn-dark" style="padding: 4px 8px; font-size: 11px;" onclick="saveReportEdit(${id})">Save</button>
+        </div>
+      `;
+    }
+
+    function saveReportEdit(id) {
+      const val = document.getElementById('edit-rep-val-' + id).value;
+      const p = products[currentProductIndex];
+      const rep = p.reports.find(r => r.id === id);
+      if (rep) rep.content = val;
+      renderReportsPage();
+      alert("✅ Claude Report Section saved!");
+    }
+
+    function implementReportStrategy() {
+      const p = products[currentProductIndex];
+      p.score = 94;
+      p.activeSales = Math.round(p.activeSales * 1.12);
+      updateAllCurrencyValues();
+      alert("🚀 Report Recommendations Implemented! Team Health Score increased to 94/100 points.");
+      navigateTo('dashboard');
+    }
+
+    /* ================= PRICING ENGINE ================= */
+    function onPriceSliderChange(val) {
+      const p = products[currentProductIndex];
+      const price = parseFloat(val);
+      const margin = (((price - p.cost) / price) * 100).toFixed(1);
+
+      document.getElementById('sliderValDisplay').textContent = formatMoney(price);
+      document.getElementById('enginePriceVal').textContent = formatMoney(price);
+      document.getElementById('engineMarginVal').textContent = margin + "%";
+
+      // Live graph bar shift
+      const ratio = price / p.price;
+      renderCurveBars(ratio);
+    }
+
+    function renderCurveBars(ratio = 1.0) {
+      const p = products[currentProductIndex];
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Okt','Nov','Dec'];
+      months.forEach((m, i) => {
+        const bar = document.getElementById('bar-' + m);
+        if (bar) {
+          const h = Math.min(100, Math.round(p.curve[i] * ratio));
+          bar.style.height = h + '%';
+        }
+      });
+    }
+
+    function updatePricingEngineView() {
+      const p = products[currentProductIndex];
+      document.getElementById('enginePriceVal').textContent = formatMoney(p.price);
+      document.getElementById('engineCostVal').textContent = formatMoney(p.cost);
+      document.getElementById('engineMarginVal').textContent = p.margin + "%";
+      document.getElementById('sliderValDisplay').textContent = formatMoney(p.price);
+      renderCurveBars();
+    }
+
+    function saveActivePrice() {
+      const p = products[currentProductIndex];
+      const sliderVal = parseFloat(document.getElementById('sliderValDisplay').textContent.replace(/[^0-9.]/g, '')) / currencyRate;
+      p.price = Math.round(sliderVal);
+      p.margin = parseFloat((((p.price - p.cost) / p.price) * 100).toFixed(1));
+      updateAllCurrencyValues();
+      alert(`✅ Pricing Strategy Committed! Retail: ${formatMoney(p.price)} | Margin: ${p.margin}%.`);
+      navigateTo('dashboard');
+    }
+
+    /* ================= PRODUCT ONBOARDING MODAL ================= */
+    let onboardingMode = 'scratch';
+
+    function openUploadProductModal() {
+      onboardingMode = 'scratch';
+      document.getElementById('modalTitle').textContent = "Upload & GTM-Engineer Product";
+      document.getElementById('modalBody').innerHTML = `
+        <div class="toggle-group">
+          <div class="toggle-opt active" id="tabScratch" onclick="setProductMode('scratch')">✨ Brand New (Start from Scratch)</div>
+          <div class="toggle-opt" id="tabHistorical" onclick="setProductMode('historical')">📁 Existing (Import Historical Data)</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Product Name</label>
+          <input type="text" id="inpProdName" class="form-input" placeholder="e.g. VoltCharge 15W Qi2 MagSafe">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Industry / Category</label>
+          <input type="text" id="inpProdCat" class="form-input" placeholder="e.g. Consumer Electronics & Mobile Accessories">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label class="form-label">Target Retail Price ($)</label>
+            <input type="number" id="inpProdPrice" class="form-input" value="69">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Manufacturing Unit Cost ($)</label>
+            <input type="number" id="inpProdCost" class="form-input" value="22">
+          </div>
+        </div>
+
+        <div id="scratchFields">
+          <div class="form-group">
+            <label class="form-label">Product Concept / Problem Solved</label>
+            <textarea id="inpProdHook" class="form-textarea" rows="2" placeholder="Ultra-thin aluminum MagSafe power bank with 15W fast wireless charging..."></textarea>
+          </div>
+        </div>
+
+        <div id="historicalFields" style="display: none;">
+          <div class="form-group">
+            <label class="form-label">Past 12-Month Sales History (Enter monthly revenue or drop CSV)</label>
+            <textarea id="inpHistoricalSales" class="form-textarea" rows="2" placeholder="Jan: $4500, Feb: $5200, Mar: $6100, Apr: $5900, May: $6400, Jun: $7800..."></textarea>
+            <span style="font-size: 11px; color: var(--text-subtle);">Claude will analyze historical conversion drop-offs and generate optimization campaigns.</span>
+          </div>
+        </div>
+      `;
+      document.getElementById('modalActions').innerHTML = `
+        <button class="btn-white" onclick="closeModal()">Cancel</button>
+        <button class="btn-dark" onclick="submitProductOnboarding()">Launch GTM Engineer</button>
+      `;
+      document.getElementById('modalBackdrop').classList.add('show');
+    }
+
+    function setProductMode(mode) {
+      onboardingMode = mode;
+      document.getElementById('tabScratch').className = mode === 'scratch' ? 'toggle-opt active' : 'toggle-opt';
+      document.getElementById('tabHistorical').className = mode === 'historical' ? 'toggle-opt active' : 'toggle-opt';
+      document.getElementById('scratchFields').style.display = mode === 'scratch' ? 'block' : 'none';
+      document.getElementById('historicalFields').style.display = mode === 'historical' ? 'block' : 'none';
+    }
+
+    function submitProductOnboarding() {
+      const name = document.getElementById('inpProdName').value || "New Product";
+      const cat = document.getElementById('inpProdCat').value || "Hardware & D2C";
+      const price = parseFloat(document.getElementById('inpProdPrice').value) || 69;
+      const cost = parseFloat(document.getElementById('inpProdCost').value) || 22;
+      const hook = document.getElementById('inpProdHook').value || "High performance direct-to-consumer flagship product.";
+      const margin = (((price - cost) / price) * 100).toFixed(1);
+
+      products.push({
+        id: products.length + 1,
+        name: name,
+        industry: cat,
+        hook: hook,
+        price: price,
+        cost: cost,
+        margin: parseFloat(margin),
+        score: onboardingMode === 'historical' ? 89 : 85,
+        activeSales: Math.round(price * 210),
+        revenue: Math.round(price * 160),
+        sold: 210,
+        rate: "11.2%",
+        curve: [30, 42, 55, 68, 75, 82, 60, 72, 80, 88, 92, 105],
+        campaigns: [
+          { id: 10, title: "Launch Seeding & Tech Reviewers", type: "Creator", budget: 1200, cpa: 28, lift: 15, status: "draft", tactic: "Send review units to gadget reviewers on YouTube and TikTok.", timeline: "Week 1-2" }
+        ],
+        plans: [
+          { id: 10, name: "Standard Retail", price: price, hero: true, features: ["Single Unit Kit", "1-Year Warranty"], target: "Individual buyers", phase: "Launch" }
+        ],
+        reports: [
+          { id: 10, title: "1. Market Viability Dossier", content: `Market positioning analysis for ${name}. Projected retail price of $${price} offers a ${margin}% gross margin, ensuring healthy marketing unit economics.` }
+        ]
+      });
+
+      document.getElementById('productBadgeCount').textContent = products.length;
+      currentProductIndex = products.length - 1;
+      applyActiveProduct();
+      closeModal();
+      alert(`🚀 GTM Engineer Analysis Complete! Product "${name}" is now active in your workspace.`);
+      navigateTo('dashboard');
+    }
+
+    function renderProductsCatalog() {
+      const grid = document.getElementById('productsCatalogGrid');
+      let html = '';
+      products.forEach((p, idx) => {
+        const isActive = idx === currentProductIndex;
+        html += `
+          <div style="background: #ffffff; border: 1.5px solid ${isActive ? 'var(--orange-primary)' : 'var(--border-card)'}; border-radius: 16px; padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+              <span style="font-size: 11px; font-weight: 700; color: var(--orange-primary); background: var(--orange-tint-1); padding: 2px 8px; border-radius: 12px;">${p.industry}</span>
+              ${isActive ? '<span style="font-size: 11px; font-weight: 800; color: #12b76a;">● Active</span>' : ''}
+            </div>
+            <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">${p.name}</h3>
+            <p style="font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-bottom: 14px;">"${p.hook}"</p>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; border-top: 1px solid var(--border-subtle); padding-top: 10px; margin-bottom: 14px;">
+              <span>Target: <b>${formatMoney(p.price)}</b></span>
+              <span>Cost: <b>${formatMoney(p.cost)}</b></span>
+              <span style="color: #12b76a;">Margin: <b>${p.margin}%</b></span>
+            </div>
+            <button class="${isActive ? 'btn-dark' : 'btn-white'}" style="width: 100%; justify-content: center;" onclick="selectProductByIndex(${idx})">
+              ${isActive ? 'Currently Active' : 'Switch to this Product'}
+            </button>
+          </div>
+        `;
+      });
+      grid.innerHTML = html;
+    }
+
+    function selectProductByIndex(idx) {
+      currentProductIndex = idx;
+      applyActiveProduct();
+      navigateTo('dashboard');
+    }
+
+    function applyActiveProduct() {
+      const p = products[currentProductIndex];
+      document.getElementById('activeProductLabel').textContent = p.name;
+      document.getElementById('activeProductTitle').textContent = p.name + " — Launch Blueprint";
+      document.getElementById('activeProductHook').textContent = `"${p.hook}"`;
+      updateAllCurrencyValues();
+      renderCurveBars();
+    }
+
+    function closeModal() {
+      document.getElementById('modalBackdrop').classList.remove('show');
+    }
+
+    // Initialize View
+    applyActiveProduct();
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "launchpulse-gtm": {
+      "command": "python",
+      "args": [
+        "d:/don't_know/Assignment 1/mcp-server/server.py"
+      ],
+      "env": {
+        "LAUNCHPULSE_API_URL": "http://127.0.0.1:8000"
+      }
+    }
+  }
+}
